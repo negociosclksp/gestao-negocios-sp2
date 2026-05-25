@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão Administrativa - Negócios SP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#f4f6fb;color:#1a1f36;min-height:100vh;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:rgba(15,17,25,.6);backdrop-filter:blur(6px);z-index:9000;display:flex;align-items:center;justify-content:center;}
+.login-box{background:#fff;border-radius:18px;padding:2.5rem 2rem;width:320px;box-shadow:0 20px 60px rgba(0,0,0,.15);text-align:center;position:relative;}
+.login-logo{width:52px;height:52px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 1rem;}
+.login-box h2{font-size:16px;font-weight:700;color:#1a1f36;margin-bottom:4px;}
+.login-box p{font-size:12px;color:#8b92b0;margin-bottom:1.5rem;}
+.login-field{width:100%;background:#f4f6fb;border:1px solid #e0e4ef;border-radius:10px;padding:10px 14px;font-size:13px;font-family:inherit;color:#1a1f36;outline:none;margin-bottom:10px;display:block;}
+.login-field:focus{border-color:#2563eb;}
+.login-btn{width:100%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+.login-btn:hover{opacity:.9;}
+.login-error{color:#dc2626;font-size:12px;margin-top:10px;display:none;}
+
+/* HEADER */
+.header{background:#fff;border-bottom:1px solid #e0e4ef;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.logo{width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.header-brand h1{font-size:15px;font-weight:600;}
+.header-brand span{font-size:12px;color:#8b92b0;margin-left:4px;}
+.last-update{font-family:'DM Mono',monospace;font-size:11px;color:#8b92b0;background:#f0f2f8;border:1px solid #e0e4ef;padding:3px 10px;border-radius:20px;}
+.user-pill{display:flex;align-items:center;gap:8px;background:#f0f2f8;border:1px solid #e0e4ef;border-radius:20px;padding:4px 12px 4px 6px;cursor:pointer;}
+.user-pill:hover{background:#e5e9f5;}
+.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.user-pill span{font-size:12px;font-weight:600;color:#1a1f36;}
+.user-pill small{font-size:11px;color:#8b92b0;}
+
+/* LAYOUT */
+.app-body{display:flex;}
+.sidebar{width:210px;min-width:210px;background:#fff;border-right:1px solid #e0e4ef;padding:1rem 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+.sidebar-label{font-size:10px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.1em;padding:6px 16px 4px;}
+.sidebar-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;font-weight:500;color:#4a5272;cursor:pointer;border-left:3px solid transparent;transition:all .12s;}
+.sidebar-item:hover{background:#f4f6fb;color:#1a1f36;}
+.sidebar-item.active{background:#eff6ff;color:#2563eb;border-left-color:#2563eb;font-weight:600;}
+.sidebar-item .icon{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
+.sidebar-divider{height:1px;background:#e0e4ef;margin:8px 16px;}
+.sidebar-subnav{display:none;}
+.content-area{flex:1;min-width:0;padding:1.5rem;}
+
+/* PANELS */
+.panel{display:none;} .panel.active{display:block;}
+
+/* CARDS */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem;}
+.card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1.1rem 1.3rem;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.card.blue::before{background:#2563eb;}.card.purple::before{background:#7c3aed;}.card.green::before{background:#059669;}.card.amber::before{background:#d97706;}
+.card-label{font-size:11px;font-weight:600;color:#8b92b0;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.card-value{font-size:26px;font-weight:700;color:#1a1f36;line-height:1;margin-bottom:3px;}
+.card-sub{font-size:12px;color:#8b92b0;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge.green{background:#d1fae5;color:#065f46;}.badge.amber{background:#fef3c7;color:#92400e;}.badge.blue{background:#dbeafe;color:#1e40af;}.badge.gray{background:#e5e7eb;color:#4b5563;}
+
+/* TABLE */
+.table-wrap{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
+.table-toolbar{display:flex;align-items:center;gap:10px;padding:.9rem 1.2rem;border-bottom:1px solid #e0e4ef;flex-wrap:wrap;}
+.search-input,.filter-select{background:#f4f6fb;border:1px solid #e0e4ef;border-radius:8px;padding:7px 11px;color:#1a1f36;font-family:inherit;font-size:13px;outline:none;}
+.search-input{width:220px;}.search-input:focus{border-color:#2563eb;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{padding:9px 14px;text-align:left;font-size:11px;font-weight:600;color:#8b92b0;text-transform:uppercase;letter-spacing:.06em;background:#f4f6fb;border-bottom:1px solid #e0e4ef;white-space:nowrap;cursor:pointer;}
+tbody tr{border-bottom:1px solid #e0e4ef;transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#f8faff;}
+tbody td{padding:11px 14px;vertical-align:middle;}
+.drt-mono{font-family:'DM Mono',monospace;font-size:11px;color:#8b92b0;}
+.empty-msg{text-align:center;padding:2.5rem;color:#8b92b0;}
+.section-title{font-size:13px;font-weight:600;color:#4a5272;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;}
+
+/* TIMELINE */
+.timeline-container{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
+.tl-header-row{display:grid;background:#f4f6fb;border-bottom:1px solid #e0e4ef;font-size:11px;font-weight:500;color:#8b92b0;text-transform:uppercase;letter-spacing:.06em;}
+.tl-row{display:grid;border-bottom:1px solid #e0e4ef;align-items:center;min-height:62px;transition:background .1s;}
+.tl-row:last-child{border-bottom:none;}
+.tl-row:hover{background:#f8faff;}
+.tl-name{padding:0 1rem;display:flex;flex-direction:column;gap:2px;}
+.tl-name strong{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tl-name span{font-size:11px;color:#8b92b0;}
+.tl-chart{padding:6px 10px;position:relative;height:62px;display:flex;align-items:center;}
+.tl-bar{position:absolute;height:16px;border-radius:4px;cursor:pointer;transition:opacity .15s;top:8px;}
+.tl-bar:hover{opacity:.8;}
+.tl-bar.p2{top:32px;}
+.tl-bar-label{position:absolute;font-size:9px;font-weight:600;color:#4a5272;white-space:nowrap;pointer-events:none;top:26px;letter-spacing:.02em;}
+.tl-bar-label.p2{top:50px;}
+.month-tick{position:absolute;top:0;bottom:0;width:1px;background:#e0e4ef;pointer-events:none;}
+.month-label{position:absolute;top:3px;font-size:10px;color:#8b92b0;font-family:'DM Mono',monospace;pointer-events:none;transform:translateX(-50%);}
+.today-line{position:absolute;top:0;bottom:0;width:2px;background:#dc2626;opacity:.6;pointer-events:none;z-index:5;}
+
+/* CALENDAR */
+.cal-controls{display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.btn-nav{background:#fff;border:1px solid #e0e4ef;border-radius:8px;padding:5px 11px;color:#4a5272;cursor:pointer;font-size:16px;}
+.cal-month-label{font-size:15px;font-weight:600;min-width:150px;text-align:center;}
+.calendar-grid{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
+.cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);background:#f4f6fb;border-bottom:1px solid #e0e4ef;}
+.cal-day-name{padding:9px;text-align:center;font-size:11px;font-weight:600;color:#8b92b0;text-transform:uppercase;}
+.cal-weeks{padding:6px;display:flex;flex-direction:column;gap:4px;}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-cell{border-radius:8px;min-height:74px;padding:5px;background:#f4f6fb;border:1px solid transparent;}
+.cal-cell.other-month{opacity:.3;}.cal-cell.today{border-color:#2563eb;}
+.cal-date{font-size:12px;font-weight:500;color:#4a5272;margin-bottom:3px;display:flex;align-items:center;justify-content:space-between;}
+.today-badge{background:#2563eb;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.cal-event{font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
+
+/* ANIVERSÁRIO */
+.aniv-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.aniv-card{background:#fff;border:1px solid #e0e4ef;border-radius:14px;padding:1.2rem;display:flex;flex-direction:column;gap:9px;position:relative;overflow:hidden;transition:box-shadow .15s;}
+.aniv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.aniv-card.status-realizada::before{background:#059669;}.aniv-card.status-pendente::before{background:#d97706;}.aniv-card.status-afazer::before{background:#2563eb;}
+.aniv-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.07);}
+.aniv-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.aniv-name{font-size:13px;font-weight:600;line-height:1.3;}
+.aniv-bday{font-size:11px;color:#8b92b0;margin-top:2px;}
+.aniv-info-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#4a5272;border-top:1px solid #e0e4ef;padding-top:9px;}
+.aniv-comment{font-size:11px;color:#8b92b0;font-style:italic;border-top:1px solid #e0e4ef;padding-top:7px;line-height:1.4;}
+.aniv-year-track{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1.5rem;overflow-x:auto;}
+.ayt-months{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;min-width:700px;}
+.ayt-month{display:flex;flex-direction:column;gap:5px;}
+.ayt-month-label{font-size:10px;font-weight:700;color:#8b92b0;text-transform:uppercase;text-align:center;padding-bottom:5px;border-bottom:2px solid #e0e4ef;}
+.ayt-month.current .ayt-month-label{color:#2563eb;border-bottom-color:#2563eb;}
+.ayt-person{border-radius:7px;padding:6px 4px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;line-height:1.3;}
+.ayt-day{font-size:9px;opacity:.8;display:block;margin-top:1px;}
+
+/* PDI */
+.pdi-header-box{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.pdi-header-box h3{font-size:15px;font-weight:700;color:#1a1f36;margin-bottom:2px;}
+.pdi-header-box p{font-size:12px;color:#8b92b0;}
+.pdi-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;}
+.pdi-meta-tag{background:#f0f2f8;border:1px solid #e0e4ef;border-radius:8px;padding:4px 10px;font-size:11px;color:#4a5272;font-weight:500;}
+.pdi-selector{display:flex;gap:8px;flex-wrap:wrap;}
+.pdi-sel-btn{background:#f0f2f8;border:1px solid #e0e4ef;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#1a1f36;cursor:pointer;font-family:inherit;transition:all .12s;}
+.pdi-sel-btn:hover{background:#dbeafe;border-color:#2563eb;color:#2563eb;}
+.pdi-cards-list{display:flex;flex-direction:column;gap:14px;}
+.pdi-card{background:#fff;border:1px solid #e0e4ef;border-radius:14px;overflow:hidden;}
+.pdi-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.4rem;cursor:pointer;gap:12px;transition:background .1s;}
+.pdi-card-hdr:hover{background:#f8faff;}
+.pdi-card-title{font-size:13px;font-weight:600;color:#1a1f36;flex:1;}
+.pdi-card-meta{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.cat-badge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.cat-tecnica{background:#dbeafe;color:#1e40af;}.cat-negocio{background:#d1fae5;color:#065f46;}.cat-comportamental{background:#f5f3ff;color:#6d28d9;}
+.pdi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.pdi-card-body{padding:0 1.4rem 1.2rem;border-top:1px solid #f0f2f8;display:none;}
+.pdi-card-body.open{display:block;}
+.pdi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1rem;}
+.pdi-field label{font-size:10px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:3px;}
+.pdi-field p{font-size:12px;color:#1a1f36;line-height:1.5;}
+.pdi-field.full{grid-column:1/-1;}
+.pdi-chev{font-size:11px;color:#8b92b0;transition:transform .2s;display:inline-block;}
+.pdi-chev.open{transform:rotate(180deg);}
+
+/* RDM */
+.rdm-calc-wrap,.rdm-regras-wrap{max-width:860px;}
+.rdm-header{margin-bottom:1.5rem;}
+.rdm-title{font-size:18px;font-weight:700;color:#1a1f36;}
+.rdm-sub{font-size:13px;color:#8b92b0;margin-top:3px;}
+.rdm-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:1.5rem;}
+.rdm-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1.2rem 1.4rem;}
+.rdm-card-title{font-size:12px;font-weight:700;color:#4a5272;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;}
+.rdm-radio-group{display:flex;flex-direction:column;gap:8px;}
+.rdm-radio-btn{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid #e0e4ef;border-radius:8px;cursor:pointer;font-size:13px;color:#4a5272;transition:all .12s;}
+.rdm-radio-btn input{accent-color:#2563eb;}
+.rdm-radio-btn.active,.rdm-radio-btn:has(input:checked){background:#eff6ff;border-color:#2563eb;color:#2563eb;font-weight:600;}
+.rdm-time-input{width:100%;background:#f4f6fb;border:1px solid #e0e4ef;border-radius:10px;padding:12px 16px;font-size:22px;font-weight:700;color:#1a1f36;outline:none;font-family:monospace;text-align:center;}
+.rdm-time-input:focus{border-color:#2563eb;}
+.rdm-time-hint{font-size:11px;color:#8b92b0;margin-top:8px;}
+.rdm-time-wrap{display:flex;flex-direction:column;}
+.rdm-stepper{display:flex;align-items:center;gap:16px;}
+.rdm-stepper button{width:36px;height:36px;border-radius:50%;border:1px solid #e0e4ef;background:#f4f6fb;font-size:20px;cursor:pointer;color:#1a1f36;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.rdm-stepper button:hover{background:#dbeafe;border-color:#2563eb;color:#2563eb;}
+.rdm-stepper span{font-size:22px;font-weight:700;color:#1a1f36;min-width:32px;text-align:center;}
+.rdm-select{background:#f4f6fb;border:1px solid #e0e4ef;border-radius:10px;padding:10px 14px;font-size:18px;font-weight:700;color:#1a1f36;outline:none;font-family:monospace;cursor:pointer;min-width:80px;text-align:center;}
+.rdm-select:focus{border-color:#2563eb;}
+.rdm-btn{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:12px;padding:13px 32px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;margin-bottom:1.5rem;}
+.rdm-btn:hover{opacity:.9;}
+.rdm-result{margin-bottom:1rem;}
+.rdm-result-box{border-radius:14px;padding:1.5rem;margin-bottom:12px;border:1px solid;}
+.rdm-result-box.verde{background:#ecfdf5;border-color:#6ee7b7;}
+.rdm-result-box.azul{background:#eff6ff;border-color:#93c5fd;}
+.rdm-result-box.amarelo{background:#fffbeb;border-color:#fcd34d;}
+.rdm-result-box.vermelho{background:#fff1f2;border-color:#fca5a5;}
+.rdm-result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;opacity:.7;}
+.rdm-result-value{font-size:22px;font-weight:700;margin-bottom:4px;}
+.rdm-result-desc{font-size:13px;opacity:.8;line-height:1.5;}
+.rdm-result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
+.rdm-alert{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:1rem 1.2rem;font-size:13px;color:#92400e;font-weight:500;margin-bottom:1rem;}
+/* Regras */
+.rdm-regras-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:1.5rem;}
+.rdm-regra-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1.2rem 1.4rem;}
+.rdm-regra-icon{font-size:22px;margin-bottom:8px;}
+.rdm-regra-title{font-size:13px;font-weight:700;color:#1a1f36;margin-bottom:8px;}
+.rdm-regra-body{font-size:12px;color:#4a5272;line-height:1.6;}
+.rdm-resumo{background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #c7d2fe;border-radius:14px;padding:1.4rem 1.6rem;}
+.rdm-resumo-title{font-size:14px;font-weight:700;color:#1e40af;margin-bottom:12px;}
+.rdm-resumo-items{display:flex;flex-direction:column;gap:8px;}
+.rdm-resumo-item{font-size:13px;color:#1e40af;display:flex;align-items:center;gap:8px;}
+.rdm-check{font-size:15px;}
+
+/* ESCALA */
+.escala-controls{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.escala-month-label{font-size:15px;font-weight:600;min-width:140px;text-align:center;}
+.escala-table-wrap{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:auto;}
+.escala-table{border-collapse:collapse;font-size:12px;min-width:100%;}
+.escala-table th{padding:8px 6px;text-align:center;font-size:10px;font-weight:700;color:#4a5272;background:#f4f6fb;border:1px solid #e0e4ef;white-space:nowrap;position:sticky;top:0;z-index:2;}
+.escala-table th.nome-col{text-align:left;padding-left:12px;position:sticky;left:0;z-index:3;min-width:90px;}
+.escala-table td{padding:6px 4px;text-align:center;border:1px solid #e0e4ef;font-size:10px;font-weight:600;white-space:nowrap;}
+.escala-table td.nome-col{text-align:left;padding-left:12px;font-size:12px;font-weight:600;color:#1a1f36;background:#fff;position:sticky;left:0;z-index:1;}
+.escala-table td.fds,.escala-table th.fds{background:#f3f4f6;color:#9ca3af;}
+.escala-table td.site{background:#d9ead3;color:#2d6a4f;}
+.escala-table td.home{background:#cfe2f3;color:#1e40af;}
+.escala-table td.ferias{background:#fce5cd;color:#92400e;}
+.escala-table td.feriado{background:#fff2cc;color:#92400e;}
+.escala-legenda{display:flex;gap:12px;flex-wrap:wrap;margin-top:1rem;}
+.escala-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5272;}
+.escala-leg-dot{width:12px;height:12px;border-radius:3px;}
+.escala-lista-wrap{display:flex;flex-direction:column;gap:14px;}
+.escala-lista-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
+.escala-lista-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:#f8faff;border-bottom:1px solid #e0e4ef;}
+.escala-lista-nome{font-size:13px;font-weight:700;color:#1a1f36;}
+.escala-lista-stats{display:flex;gap:8px;}
+.escala-stat{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.escala-stat-btn:hover{opacity:.85;transform:scale(1.04);}
+.escala-ana-btn{background:#f0f2f8;border:1.5px solid #e0e4ef;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#4a5272;cursor:pointer;font-family:inherit;transition:all .15s;}
+.escala-ana-btn:hover{background:#dbeafe;border-color:#2563eb;color:#2563eb;}
+.escala-ana-btn.ativo{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25);}
+.escala-stat-btn.ativo{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+.escala-lista-body{padding:.8rem 1.2rem;display:flex;flex-wrap:wrap;gap:4px;}
+.escala-dia-chip{padding:3px 7px;border-radius:6px;font-size:10px;font-weight:600;cursor:default;}
+
+/* TOOLTIP */
+.tooltip{position:fixed;background:#fff;border:1px solid #e0e4ef;border-radius:10px;padding:9px 13px;font-size:12px;color:#1a1f36;pointer-events:none;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.1);max-width:220px;display:none;}
+.tooltip strong{color:#2563eb;display:block;margin-bottom:3px;}
+.tooltip .tip-row{color:#4a5272;margin:2px 0;}
+.tooltip .tip-row span{color:#1a1f36;}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:#f4f6fb;}
+::-webkit-scrollbar-thumb{background:#c7cce0;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip">
+  <strong id="tip-name"></strong>
+  <div class="tip-row">Período: <span id="tip-period"></span></div>
+  <div class="tip-row">Cargo: <span id="tip-cargo"></span></div>
+  <div class="tip-row">Obs: <span id="tip-obs"></span></div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="login-overlay" style="display:none">
+  <div class="login-box">
+    <button onclick="closeLogin()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;color:#8b92b0;cursor:pointer;line-height:1;padding:4px" title="Fechar">✕</button>
+    <div class="login-logo">📅</div>
+    <h2 id="login-msg">Plano de Desenvolvimento Individual</h2>
+    <p id="login-sub">Por analista — insira seu usuário e senha para acessar as suas informações</p>
+    <input class="login-field" type="text" id="login-user" placeholder="Usuário" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <input class="login-field" type="password" id="login-pass" placeholder="Senha" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">Usuário ou senha incorretos.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">📅</div>
+    <div>
+      <h1>Gestão Administrativa - Negócios SP</h1>
+      <span>Gestão Fernando Franco</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="last-update" id="last-update">Carregando...</div>
+    <div class="user-pill" id="user-pill" style="display:none" onclick="doLogout()">
+      <div class="user-av" id="user-av"></div>
+      <span id="user-name-pill"></span>
+      <small>· Sair</small>
+    </div>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Menu</div>
+    <div class="sidebar-item" id="nav-rdm" onclick="onRdmClick()">
+      <span class="icon">🌙</span><span>Atuação em RDM</span>
+    </div>
+    <div class="sidebar-item" id="nav-escala" onclick="onEscalaClick()">
+      <span class="icon">📆</span><span>Escala</span>
+    </div>
+    <div class="sidebar-item active" id="nav-ferias" onclick="switchSection('ferias')">
+      <span class="icon">🏖️</span><span>Férias</span>
+    </div>
+    <div class="sidebar-item" id="nav-aniversario" onclick="switchSection('aniversario')">
+      <span class="icon">🎂</span><span>Folga Aniversário</span>
+    </div>
+    <div class="sidebar-item" id="nav-pdi" onclick="onPdiClick()">
+      <span class="icon">📈</span><span>PDI</span>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-subnav" id="ferias-subnav">
+      <div class="sidebar-label">Férias — Visões</div>
+      <div class="sidebar-item" id="tab-timeline" onclick="switchTab('timeline')"><span class="icon">📊</span><span>Timeline</span></div>
+      <div class="sidebar-item" id="tab-calendario" onclick="switchTab('calendario')"><span class="icon">🗓️</span><span>Calendário</span></div>
+      <div class="sidebar-item" id="tab-tabela" onclick="switchTab('tabela')"><span class="icon">📋</span><span>Tabela</span></div>
+    </div>
+
+    <div class="sidebar-subnav" id="aniversario-subnav">
+      <div class="sidebar-label">Folga Aniversário</div>
+      <div class="sidebar-item" id="tab-aniv-cards" onclick="switchTab('aniv-cards')"><span class="icon">🎉</span><span>Cards da Equipe</span></div>
+      <div class="sidebar-item" id="tab-aniv-tabela" onclick="switchTab('aniv-tabela')"><span class="icon">📋</span><span>Tabela</span></div>
+      <div class="sidebar-item" id="tab-aniv-timeline" onclick="switchTab('aniv-timeline')"><span class="icon">📅</span><span>Linha do Ano</span></div>
+    </div>
+
+    <div class="sidebar-subnav" id="escala-subnav">
+      <div class="sidebar-label">Escala — Visões</div>
+      <div class="sidebar-item" id="tab-escala-mensal" onclick="switchTab('escala-mensal')"><span class="icon">🗓️</span><span>Mensal</span></div>
+      <div class="sidebar-item" id="tab-escala-lista" onclick="switchTab('escala-lista')"><span class="icon">📋</span><span>Por Analista</span></div>
+    </div>
+
+    <div class="sidebar-subnav" id="rdm-subnav">
+      <div class="sidebar-label">RDM — Visões</div>
+      <div class="sidebar-item" id="tab-rdm-calc" onclick="switchTab('rdm-calc')"><span class="icon">🧮</span><span>Calculadora</span></div>
+      <div class="sidebar-item" id="tab-rdm-regras" onclick="onRegrasClick()"><span class="icon">📘</span><span>Regras</span></div>
+    </div>
+
+    <div class="sidebar-subnav" id="pdi-subnav">
+      <div class="sidebar-label">PDI — Visões</div>
+      <div class="sidebar-item" id="tab-pdi-meu" onclick="switchTab('pdi-meu')"><span class="icon">👤</span><span id="pdi-tab-label">Meu PDI</span></div>
+      <div class="sidebar-item" id="tab-pdi-resumo" onclick="switchTab('pdi-resumo')" style="display:none"><span class="icon">📊</span><span>Resumo Consolidado</span></div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <div class="panel active" id="panel-timeline">
+      <div class="summary-grid" id="summary-cards"></div>
+      <div class="section-title">Cronograma Anual — Dez 2025 a Ago 2026</div>
+      <div class="timeline-container">
+        <div class="tl-header-row" id="tl-header"></div>
+        <div id="tl-rows"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-calendario">
+      <div class="cal-controls">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn-nav" onclick="calNav(-1)">&#8249;</button>
+          <div class="cal-month-label" id="cal-month-label"></div>
+          <button class="btn-nav" onclick="calNav(1)">&#8250;</button>
+        </div>
+        <select class="filter-select" id="cal-filter" onchange="renderCalendar()">
+          <option value="">Todos os colaboradores</option>
+        </select>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+      <div style="margin-top:1rem;display:flex;gap:12px;flex-wrap:wrap;" id="cal-legend"></div>
+    </div>
+
+    <div class="panel" id="panel-tabela">
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="search-input" type="text" placeholder="🔍 Buscar..." id="search-input" oninput="filterTable()">
+          <select class="filter-select" id="cargo-filter" onchange="filterTable()">
+            <option value="">Todos os cargos</option>
+            <option value="ANALISTA">Analista</option>
+            <option value="GERENTE">Gerente</option>
+          </select>
+        </div>
+        <table><thead><tr>
+          <th onclick="sortTable('NOME')">Colaborador</th>
+          <th onclick="sortTable('CARGO')">Cargo</th>
+          <th>Férias 1</th><th>Férias 2</th><th>Obs</th>
+          <th onclick="sortTable('dias_pendentes')">Pendente</th><th>Status</th>
+        </tr></thead><tbody id="table-body"></tbody></table>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-aniv-cards">
+      <div class="summary-grid" id="aniv-summary"></div>
+      <div class="aniv-cards-grid" id="aniv-cards-grid"></div>
+    </div>
+
+    <div class="panel" id="panel-aniv-tabela">
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="search-input" type="text" placeholder="🔍 Buscar..." id="aniv-search" oninput="renderAnivTable()">
+          <select class="filter-select" id="aniv-status-filter" onchange="renderAnivTable()">
+            <option value="">Todos os status</option>
+            <option value="FOLGA REALIZADA">Folga Realizada</option>
+            <option value="PENDENTE AGENDAR">Pendente Agendar</option>
+            <option value="ANIVERSÁRIO A FAZER">A Fazer</option>
+          </select>
+        </div>
+        <table><thead><tr>
+          <th>Colaborador</th><th>Aniversário</th><th>Mês</th>
+          <th>Data da Folga</th><th>Status</th><th>Comentários</th>
+        </tr></thead><tbody id="aniv-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-aniv-timeline">
+      <div class="section-title">Aniversários ao longo do ano</div>
+      <div class="aniv-year-track" id="aniv-year-track"></div>
+    </div>
+
+    <div class="panel" id="panel-pdi-meu">
+      <div class="pdi-header-box" id="pdi-header-box"></div>
+      <div class="pdi-cards-list" id="pdi-cards-list"></div>
+    </div>
+
+    <!-- ESCALA MENSAL -->
+    <div class="panel" id="panel-escala-mensal">
+      <div class="escala-controls">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn-nav" onclick="escalaMesNav(-1)">&#8249;</button>
+          <div class="escala-month-label" id="escala-month-label"></div>
+          <button class="btn-nav" onclick="escalaMesNav(1)">&#8250;</button>
+        </div>
+        <select class="filter-select" id="escala-analista-filter" onchange="renderEscalaMensal()">
+          <option value="">Todos os analistas</option>
+          <option value="Bruno">Bruno</option>
+          <option value="Camila">Camila</option>
+          <option value="Carol">Carol</option>
+          <option value="Matheus">Matheus</option>
+          <option value="Samuel">Samuel</option>
+        </select>
+      </div>
+      <div class="escala-table-wrap" id="escala-table-wrap"></div>
+      <div class="escala-legenda">
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#d9ead3"></div>Site</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#cfe2f3"></div>Home Office</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#fce5cd"></div>Férias</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#fff2cc"></div>Feriado</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#f3f4f6"></div>Final de semana</div>
+      </div>
+    </div>
+
+    <!-- ESCALA POR ANALISTA -->
+    <div class="panel" id="panel-escala-lista">
+      <div class="escala-controls" style="gap:16px;align-items:flex-start;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <select class="filter-select" id="escala-lista-mes" onchange="renderEscalaLista()">
+            <option value="">Todos os meses</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap" id="escala-analista-btns">
+          <span style="font-size:11px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.07em;margin-right:4px">Analista:</span>
+          <button class="escala-ana-btn ativo" id="escala-ana-Bruno" onclick="setEscalaAnalistaBtn('Bruno')">Bruno</button>
+          <button class="escala-ana-btn" id="escala-ana-Camila" onclick="setEscalaAnalistaBtn('Camila')">Camila</button>
+          <button class="escala-ana-btn" id="escala-ana-Carol" onclick="setEscalaAnalistaBtn('Carol')">Carol</button>
+          <button class="escala-ana-btn" id="escala-ana-Matheus" onclick="setEscalaAnalistaBtn('Matheus')">Matheus</button>
+          <button class="escala-ana-btn" id="escala-ana-Samuel" onclick="setEscalaAnalistaBtn('Samuel')">Samuel</button>
+        </div>
+      </div>
+      <div class="escala-lista-wrap" id="escala-lista-wrap"></div>
+    </div>
+
+    <!-- RDM CALCULADORA -->
+    <div class="panel" id="panel-rdm-calc">
+      <div class="rdm-calc-wrap">
+        <div class="rdm-header">
+          <h2 class="rdm-title">🌙 Calculadora de RDM</h2>
+          <p class="rdm-sub">Atuação de analistas em implantações fora do horário</p>
+        </div>
+
+        <div class="rdm-form-grid">
+
+          <div class="rdm-card">
+            <div class="rdm-card-title">📅 Dia da implantação</div>
+            <div class="rdm-radio-group">
+              <label class="rdm-radio-btn" onclick="setDia('semana',this)">
+                <input type="radio" name="rdm-dia" value="semana" checked> Dia de semana / Sábado
+              </label>
+              <label class="rdm-radio-btn" onclick="setDia('domingo',this)">
+                <input type="radio" name="rdm-dia" value="domingo"> Domingo
+              </label>
+            </div>
+          </div>
+
+          <div class="rdm-card">
+            <div class="rdm-card-title">⏱️ Horário de término</div>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <select id="rdm-hora" class="rdm-select" onchange="calcRDM()">
+                <option value="0">00h</option><option value="1">01h</option><option value="2">02h</option><option value="3">03h</option><option value="4">04h</option><option value="5">05h</option><option value="6">06h</option><option value="7">07h</option><option value="8">08h</option><option value="9">09h</option><option value="10">10h</option><option value="11">11h</option><option value="12">12h</option><option value="13">13h</option><option value="14">14h</option><option value="15">15h</option><option value="16">16h</option><option value="17">17h</option><option value="18">18h</option><option value="19">19h</option><option value="20">20h</option><option value="21">21h</option><option value="22">22h</option><option value="23">23h</option>
+              </select>
+              <span style="font-size:20px;font-weight:700;color:#1a1f36">:</span>
+              <select id="rdm-min" class="rdm-select" onchange="calcRDM()">
+                <option value="0">00</option>
+                <option value="15">15</option>
+                <option value="30">30</option>
+                <option value="45">45</option>
+              </select>
+            </div>
+            <div class="rdm-time-hint">Horário real de encerramento da implantação</div>
+          </div>
+
+          <div class="rdm-card">
+            <div class="rdm-card-title">🔁 Dias consecutivos (incluindo hoje)</div>
+            <div class="rdm-stepper">
+              <button onclick="stepDias(-1)">−</button>
+              <span id="rdm-dias-val">1</span>
+              <button onclick="stepDias(1)">+</button>
+            </div>
+            <div class="rdm-time-hint" style="margin-top:8px">7 dias → 8º dia é folga obrigatória</div>
+          </div>
+
+        </div>
+
+        <button class="rdm-btn" onclick="calcRDM()">Calcular</button>
+        <div class="rdm-result" id="rdm-result"></div>
+
+      </div>
+    </div>
+
+    <!-- RDM REGRAS -->
+    <div class="panel" id="panel-rdm-regras">
+      <div class="rdm-regras-wrap">
+        <h2 class="rdm-title" style="margin-bottom:1.5rem">📘 Regras — Atuação fora do horário</h2>
+        <div class="rdm-regras-grid">
+          <div class="rdm-regra-card">
+            <div class="rdm-regra-icon">⏱️</div>
+            <div class="rdm-regra-title">Descanso mínimo obrigatório</div>
+            <div class="rdm-regra-body">Sempre que houver atuação fora do horário, é obrigatório <strong>mínimo de 11 horas consecutivas</strong> de descanso antes do retorno.</div>
+          </div>
+          <div class="rdm-regra-card">
+            <div class="rdm-regra-icon">🌙</div>
+            <div class="rdm-regra-title">Término após 21h</div>
+            <div class="rdm-regra-body">Se a implantação terminar após 21h, aplica-se o descanso de 11h. <br><br>• Retorno até 12h → <strong>Home Office</strong><br>• Retorno após 12h → <strong>Folga abonada integral</strong></div>
+          </div>
+          <div class="rdm-regra-card">
+            <div class="rdm-regra-icon">🏠</div>
+            <div class="rdm-regra-title">Home Office (retorno até 12h)</div>
+            <div class="rdm-regra-body">Entrada no horário calculado. Trabalho em home office. Saída entre 17h e 18h (flexível). Diferença de jornada <strong>abonada pelo gestor</strong>.</div>
+          </div>
+          <div class="rdm-regra-card">
+            <div class="rdm-regra-icon">🌴</div>
+            <div class="rdm-regra-title">Folga abonada (retorno após 12h)</div>
+            <div class="rdm-regra-body">O colaborador <strong>não trabalha</strong>. O dia é <strong>abonado integralmente</strong> pelo gestor.</div>
+          </div>
+          <div class="rdm-regra-card">
+            <div class="rdm-regra-icon">📅</div>
+            <div class="rdm-regra-title">Atuação em domingo</div>
+            <div class="rdm-regra-body">Regra diferenciada: descanso de <strong>35 horas</strong> após término. Retorno ocorre na terça-feira.<br><br>• Até 12h terça → Home Office<br>• Após 12h terça → Folga abonada</div>
+          </div>
+          <div class="rdm-regra-card">
+            <div class="rdm-regra-icon">🔁</div>
+            <div class="rdm-regra-title">Jornada contínua</div>
+            <div class="rdm-regra-body">Após <strong>7 dias consecutivos</strong> trabalhados, o <strong>8º dia é folga obrigatória</strong> — não pode ser acionado sob nenhuma hipótese.</div>
+          </div>
+        </div>
+
+        <div class="rdm-resumo">
+          <div class="rdm-resumo-title">✅ Resumo Executivo</div>
+          <div class="rdm-resumo-items">
+            <div class="rdm-resumo-item"><span class="rdm-check">✔</span> Após 21h → descanso de 11h</div>
+            <div class="rdm-resumo-item"><span class="rdm-check">✔</span> Retorno até 12h → HO + ajuste de jornada</div>
+            <div class="rdm-resumo-item"><span class="rdm-check">✔</span> Retorno após 12h → folga abonada</div>
+            <div class="rdm-resumo-item"><span class="rdm-check">✔</span> Domingo → 35h de descanso</div>
+            <div class="rdm-resumo-item"><span class="rdm-check">✔</span> 7 dias seguidos → 8º dia folga obrigatória</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-pdi-resumo">
+      <div class="section-title" style="margin-bottom:1rem">Resumo Consolidado — Todos os PDIs</div>
+      <div class="table-wrap">
+        <table><thead><tr>
+          <th>Colaborador</th><th>Competência</th><th>Categoria</th>
+          <th>Prioridade</th><th>Prazo</th><th>Status</th>
+        </tr></thead><tbody id="pdi-resumo-body"></tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── USUÁRIOS ──────────────────────────────────────────────────────────────────
+const USERS = [
+  {user:'fernando', pass:'franco2026',  nome:'Fernando Franco',  role:'gestor',   pdi:null},
+  {user:'bruno',    pass:'saraiva2026', nome:'Bruno Saraiva',    role:'analista', pdi:'BRUNO_SARAIVA'},
+  {user:'camila',   pass:'camila2026',  nome:'Camila Barboza',   role:'analista', pdi:'CAMILA_DE_MORAES'},
+  {user:'carolina', pass:'carol2026',   nome:'Carolina Andrade', role:'analista', pdi:'CAROLINA_ANDRADE'},
+  {user:'matheus',  pass:'matheus2026', nome:'Matheus Lopes',    role:'analista', pdi:'MATHEUS_LOPES'},
+  {user:'samuel',   pass:'samuel2026',  nome:'Samuel Pinto',     role:'analista', pdi:'SAMUEL_PINTO'},
+];
+let currentUser = null;
+
+// ── DADOS FÉRIAS ──────────────────────────────────────────────────────────────
+// LAST_UPDATE: 25/05/2026 17:54
+const INLINE_DATA = [
+// @@DATA_START@@
+{DRT:'9003013508',NOME:'CAMILA CRISTINE DE MORAES BARBOZA',CARGO:'ANALISTA',FERIAS1_INICIO:'2025-12-22',FERIAS1_FIM:'2026-01-10',FERIAS2_INICIO:'',FERIAS2_FIM:'',OBS:'20 DIAS',dias_pendentes:0,AGENDADA:'SIM'},
+{DRT:'9003009273',NOME:'CAROLINA RIBEIRO DE ANDRADE',CARGO:'ANALISTA',FERIAS1_INICIO:'2026-01-12',FERIAS1_FIM:'2026-02-10',FERIAS2_INICIO:'',FERIAS2_FIM:'',OBS:'30 DIAS',dias_pendentes:0,AGENDADA:'SIM'},
+{DRT:'9003000517',NOME:'BRUNO GREGIO SARAIVA',CARGO:'ANALISTA',FERIAS1_INICIO:'2026-04-20',FERIAS1_FIM:'2026-05-09',FERIAS2_INICIO:'',FERIAS2_FIM:'',OBS:'VENDER 10 DIAS',dias_pendentes:0,AGENDADA:'SIM'},
+{DRT:'9003001695',NOME:'MATHEUS CAMARGO DE OLIVEIRA LOPES',CARGO:'ANALISTA',FERIAS1_INICIO:'2026-05-25',FERIAS1_FIM:'2026-06-24',FERIAS2_INICIO:'',FERIAS2_FIM:'',OBS:'30 DIAS',dias_pendentes:4,AGENDADA:'SIM'},
+{DRT:'9003000777',NOME:'SAMUEL ANTONIO PINTO',CARGO:'ANALISTA',FERIAS1_INICIO:'2026-07-06',FERIAS1_FIM:'2026-08-04',FERIAS2_INICIO:'',FERIAS2_FIM:'',OBS:'30 DIAS',dias_pendentes:0,AGENDADA:'SIM'},
+{DRT:'9003000169',NOME:'FERNANDO SOUZA FRANCO',CARGO:'GERENTE',FERIAS1_INICIO:'2026-01-05',FERIAS1_FIM:'2026-01-19',FERIAS2_INICIO:'2026-06-29',FERIAS2_FIM:'2026-07-13',OBS:'15 + 15',dias_pendentes:11,AGENDADA:'SIM'},
+// @@DATA_END@@
+];
+
+// ── DADOS ANIVERSÁRIO ─────────────────────────────────────────────────────────
+// ANIV_LAST_UPDATE: 25/05/2026 17:54
+const ANIV_DATA = [
+// @@ANIV_DATA_START@@
+{NOME:'CAROLINA RIBEIRO DE ANDRADE',ANIVERSARIO:'1994-03-17',MES:'MARÇO',STATUS:'PENDENTE AGENDAR',DATA_FOLGA:'',COMENTARIOS:'Optou por tirar a folga em outra data/mês.'},
+{NOME:'MATHEUS CAMARGO DE OLIVEIRA LOPES',ANIVERSARIO:'1997-05-08',MES:'MAIO',STATUS:'FOLGA REALIZADA',DATA_FOLGA:'2026-05-08',COMENTARIOS:''},
+{NOME:'BRUNO GREGIO SARAIVA',ANIVERSARIO:'1995-06-09',MES:'JUNHO',STATUS:'ANIVERSÁRIO A FAZER',DATA_FOLGA:'',COMENTARIOS:''},
+{NOME:'CAMILA CRISTINE DE MORAES BARBOZA',ANIVERSARIO:'1984-08-29',MES:'AGOSTO',STATUS:'ANIVERSÁRIO A FAZER',DATA_FOLGA:'',COMENTARIOS:''},
+{NOME:'SAMUEL ANTONIO PINTO',ANIVERSARIO:'1996-11-06',MES:'NOVEMBRO',STATUS:'ANIVERSÁRIO A FAZER',DATA_FOLGA:'',COMENTARIOS:''},
+{NOME:'FERNANDO SOUZA FRANCO',ANIVERSARIO:'1981-12-26',MES:'DEZEMBRO',STATUS:'ANIVERSÁRIO A FAZER',DATA_FOLGA:'',COMENTARIOS:''},
+// @@ANIV_DATA_END@@
+];
+
+// ── DADOS PDI ─────────────────────────────────────────────────────────────────
+const PDI_DATA = {
+  'BRUNO_SARAIVA': {
+    colaborador:'BRUNO GREGIO SARAIVA', cargo:'ANALISTA DE SOLUÇÕES OPERACIONAIS I', gestor:'FERNANDO SOUZA FRANCO',
+    area:'NEGÓCIOS - SP', ciclo:'6 MESES', periodo:'de 01/05/2026 a 31/12/2026',
+    itens:[
+      {competencia:'Documentação Funcional e Técnica de Sistemas  - Projeto Migração Agile para Solução Outsystems',categoria:'Técnica',situacao:'Detém o maior conhecimento técnico e funcional do sistema atual (AGILE), incluindo regras implícitas, exceções e comportamentos não documentados, porém ainda em evolução quanto à formalização estruturada desse conhecimento.',objetivo:'Documentar de forma completa, estruturada e rastreável todo o funcionamento do sistema atual (AGILE), garantindo que o conhecimento crítico seja preservado e corretamente utilizado na construção da nova ferramenta.',acao:'Levantar e documentar: - Fluxos operacionais e Regras de negócio (explícitas e implícitas) - Exceções e cenários críticos - Telas, campos, regras e integrações  Utilizar modelo padrão de documentação do projeto, e validar os documentos com stakeholders técnicos e de negócio.',tipo:'Projeto / On the Job',responsavel:'Analista',prioridade:'Alta',prazo:'01/06/2026',indicador:'Documentação utilizada efetivamente como base de construção da nova ferramenta, sem identificação posterior de lacunas críticas.',avaliacao:'Validação formal pelo time de TI (responsável pela construção) e stakeholders do projeto.',status:'Em andamento',resultado:'- Redução de custos e padronização de Ferramentas - Mitigação de riscos na migração e preservação do conhecimento crítico do sistema legado.',obs:''},
+      {competencia:'Fortalecer a Visão de Negócio e Pensamento Estratégico',categoria:'Negócio',situacao:'O time possui forte capacidade de execução e análise, porém há oportunidades na hora de demonstrar de forma estruturada o impacto no negócio, operação ou cliente em cada projeto ou demanda.',objetivo:'Desenvolver uma atuação orientada ao negócio, garantindo que todas as entregas considerem e comuniquem claramente o impacto operacional, estratégico e para o cliente.',acao:'- Identificar e registrar o impacto de negócio em todas as demandas e projetos - Incluir, nas documentações e apresentações, um campo padrão de “Impacto no Negócio” - Conduzir alinhamentos considerando riscos, impactos e prioridades do negócio',tipo:'On the Job / Rotina de Trabalho',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Demandas mais bem priorizadas, redução de retrabalho e melhor alinhamento com gestores, clientes e Diretoria.',avaliacao:'Feedback da gestão, clareza nas apresentações e decisões mais rápidas em fóruns de alinhamento.',status:'Em andamento',resultado:'Time reconhecido pela maturidade de negócio e capacidade de atuar além da execução técnica.',obs:''},
+      {competencia:'Análise Financeira e Tomada de Decisão Orientada a Valor',categoria:'Negócio',situacao:'O time possui foco em escopo, prazo e solução, com oportunidade de fortalecer a análise de custos, benefícios e impacto financeiro das iniciativas.',objetivo:'Desenvolver a capacidade de construir business cases simples e objetivos, trazendo visão de impacto financeiro para apoiar decisões estratégicas e priorização de projetos.',acao:'- Identificar, para projetos e grandes demandas:    - Custos estimados (esforço, licenças, fornecedores, tempo)    - Benefícios esperados (redução de custo, eficiência, mitigação de risco, receita) - Construir business cases simplificados para apoio à decisão - Comunicar impacto financeiro em fóruns de alinhamento e acompanhamento',tipo:'On the Job / Prática de Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Projetos priorizados com base em valor e impacto financeiro, com maior apoio da gestão e Diretoria.',avaliacao:'Qualidade dos business cases apresentados e feedback da liderança.',status:'Em andamento',resultado:'Time atuando como parceiro estratégico do negócio, com discurso alinhado ao nível executivo.',obs:''},
+    ],
+  }},
+  'CAMILA_DE_MORAES': {
+    colaborador:'CAMILA CRISTINE DE MORAES BARBOZA', cargo:'ANALISTA DE SOLUÇÕES OPERACIONAIS I', gestor:'FERNANDO SOUZA FRANCO',
+    area:'NEGÓCIOS - SP', ciclo:'6 MESES', periodo:'de 01/05/2026 a 01/12/2026',
+    itens:[
+      {competencia:'Atuação em Projetos  - Projeto Migração Workcenter para o cVortex',categoria:'Técnica',situacao:'Atua com alta performance na condução de projetos, com forte domínio do negócio, sendo referência para stakeholders.',objetivo:'Consolidar-se como líder funcional do projeto de Migração do Workcenter para o cVortex, garantindo aderência total aos requisitos de negócio.',acao:'Atuar como ponto focal do Programa de Migração do Workcenter para o cVortex, conduzindo: - Levantamento e documentação de requisitos - Validação de AS IS x TO BE - Homologações com áreas de negócio e Fornecedor',tipo:'Projeto / On the Job',responsavel:'Analista',prioridade:'Alta',prazo:'01/12/2026',indicador:'- Migração entregue dentro do prazo, com aprovação formal das áreas de negócio. - Redução das licenças do Fornecedor atual.',avaliacao:'Feedback dos stakeholders + Entrega validada',status:'Em andamento',resultado:'Redução de custos e padronização de Ferramentas',obs:''},
+      {competencia:'Fortalecer a Visão de Negócio e Pensamento Estratégico',categoria:'Negócio',situacao:'O time possui forte capacidade de execução e análise, porém há oportunidades na hora de demonstrar de forma estruturada o impacto no negócio, operação ou cliente em cada projeto ou demanda.',objetivo:'Desenvolver uma atuação orientada ao negócio, garantindo que todas as entregas considerem e comuniquem claramente o impacto operacional, estratégico e para o cliente.',acao:'- Identificar e registrar o impacto de negócio em todas as demandas e projetos - Incluir, nas documentações e apresentações, um campo padrão de “Impacto no Negócio” - Conduzir alinhamentos considerando riscos, impactos e prioridades do negócio',tipo:'On the Job / Rotina de Trabalho',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Demandas mais bem priorizadas, redução de retrabalho e melhor alinhamento com gestores, clientes e Diretoria.',avaliacao:'Feedback da gestão, clareza nas apresentações e decisões mais rápidas em fóruns de alinhamento.',status:'Em andamento',resultado:'Time reconhecido pela maturidade de negócio e capacidade de atuar além da execução técnica.',obs:''},
+      {competencia:'Análise Financeira e Tomada de Decisão Orientada a Valor',categoria:'Negócio',situacao:'O time possui foco em escopo, prazo e solução, com oportunidade de fortalecer a análise de custos, benefícios e impacto financeiro das iniciativas.',objetivo:'Desenvolver a capacidade de construir business cases simples e objetivos, trazendo visão de impacto financeiro para apoiar decisões estratégicas e priorização de projetos.',acao:'- Identificar, para projetos e grandes demandas:    - Custos estimados (esforço, licenças, fornecedores, tempo)    - Benefícios esperados (redução de custo, eficiência, mitigação de risco, receita) - Construir business cases simplificados para apoio à decisão - Comunicar impacto financeiro em fóruns de alinhamento e acompanhamento',tipo:'On the Job / Prática de Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Projetos priorizados com base em valor e impacto financeiro, com maior apoio da gestão e Diretoria.',avaliacao:'Qualidade dos business cases apresentados e feedback da liderança.',status:'Em andamento',resultado:'Time atuando como parceiro estratégico do negócio, com discurso alinhado ao nível executivo.',obs:''},
+    ],
+  }},
+  'CAROLINA_ANDRADE': {
+    colaborador:'CAROLINA RIBEIRO DE ANDRADE', cargo:'ANALISTA DE PROCESSOS III', gestor:'FERNANDO SOUZA FRANCO',
+    area:'NEGÓCIOS - SP', ciclo:'6 MESES', periodo:'de 01/05/2026 a 31/12/2026',
+    itens:[
+      {competencia:'Atuação em Projetos  - Projeto Migração dos Manuais do Synapse para o Beedoo e Iasmin',categoria:'Técnica',situacao:'Possui boa capacidade de documentação e entendimento dos manuais de atendimento, com experiência em ter atuado durante anos no time de Processos diretamente com a ferramenta atual e uma das alternativas para migração.',objetivo:'Garantir a migração completa, estruturada e confiável dos manuais de atendimento da ferramenta atual para a nova ferramenta, assegurando continuidade operacional e aderência aos processos do negócio.',acao:'- Levantar e analisar os manuais existentes - Identificar ajustes necessários para o novo contexto da ferramenta - Garantir a migraçãor e padronização dos manuais junto ao fornecedor e time de processos. - Validar os materiais com operação e stakeholders do projetos técnicos e de negócio.',tipo:'Projeto / On the Job',responsavel:'Analista',prioridade:'Alta',prazo:'31/12/2026',indicador:'Manuais publicados e utilizados pela operação sem necessidade de correções relevantes pós-implantação.',avaliacao:'Validação da Operação e Clientes.',status:'Em andamento',resultado:'- Redução de custos e padronização de Ferramentas - Continuidade do atendimento e ganho de eficiência operacional após a migração.',obs:''},
+      {competencia:'Atuação em Projetos  - Projeto Implantação Keeta',categoria:'Negócio',situacao:'Bom entendimento de levantamento de requisitos, mas com pouca experiência em projetos de implantação de novos clientes, e principalmente em uma lingua que não domina. Projeto terá alta exposição executiva.',objetivo:'Atuar como Analista de Negócio na implantaçãoda Keeta, garantindo alinhamento entre requisitos do cliente, processos internos e ferramentas, com comunicação adequada ao nível executivo.',acao:'- Levantar requisitos de negócio do cliente  - Traduzir necessidades em requisitos funcionais e operacionais - Apoiar definição de fluxos, SLAs e modelos operacionais - Participar de reuniões de acompanhamento com o cliente e com a Diretoria',tipo:'Projeto / On the Job',responsavel:'Analista',prioridade:'Alta',prazo:'A Definir',indicador:'Implantação realizada dentro do prazo, com aprovação do cliente e da Diretoria.',avaliacao:'Feedback do Gerente do Projeto, stakeholders internos, Cliente e avaliação da Diretoria.',status:'Planejado',resultado:'Cliente implantado com sucesso, fortalecimento da imagem da empresa e amadurecimento da analista como referência em implantações complexas.',obs:''},
+      {competencia:'Fortalecer a Visão de Negócio e Pensamento Estratégico',categoria:'Negócio',situacao:'O time possui forte capacidade de execução e análise, porém há oportunidades na hora de demonstrar de forma estruturada o impacto no negócio, operação ou cliente em cada projeto ou demanda.',objetivo:'Desenvolver uma atuação orientada ao negócio, garantindo que todas as entregas considerem e comuniquem claramente o impacto operacional, estratégico e para o cliente.',acao:'- Identificar e registrar o impacto de negócio em todas as demandas e projetos - Incluir, nas documentações e apresentações, um campo padrão de “Impacto no Negócio” - Conduzir alinhamentos considerando riscos, impactos e prioridades do negócio',tipo:'On the Job / Rotina de Trabalho',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Demandas mais bem priorizadas, redução de retrabalho e melhor alinhamento com gestores, clientes e Diretoria.',avaliacao:'Feedback da gestão, clareza nas apresentações e decisões mais rápidas em fóruns de alinhamento.',status:'Em andamento',resultado:'Time reconhecido pela maturidade de negócio e capacidade de atuar além da execução técnica.',obs:''},
+      {competencia:'Análise Financeira e Tomada de Decisão Orientada a Valor',categoria:'Negócio',situacao:'O time possui foco em escopo, prazo e solução, com oportunidade de fortalecer a análise de custos, benefícios e impacto financeiro das iniciativas.',objetivo:'Desenvolver a capacidade de construir business cases simples e objetivos, trazendo visão de impacto financeiro para apoiar decisões estratégicas e priorização de projetos.',acao:'- Identificar, para projetos e grandes demandas:    - Custos estimados (esforço, licenças, fornecedores, tempo)    - Benefícios esperados (redução de custo, eficiência, mitigação de risco, receita) - Construir business cases simplificados para apoio à decisão - Comunicar impacto financeiro em fóruns de alinhamento e acompanhamento',tipo:'On the Job / Prática de Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Projetos priorizados com base em valor e impacto financeiro, com maior apoio da gestão e Diretoria.',avaliacao:'Qualidade dos business cases apresentados e feedback da liderança.',status:'Em andamento',resultado:'Time atuando como parceiro estratégico do negócio, com discurso alinhado ao nível executivo.',obs:''},
+    ],
+  }},
+  'MATHEUS_LOPES': {
+    colaborador:'MATHEUS CAMARGO DE OLIVEIRA LOPES', cargo:'ANALISTA DE NEGÓCIOS I', gestor:'FERNANDO SOUZA FRANCO',
+    area:'NEGÓCIOS - SP', ciclo:'6 MESES', periodo:'de 01/05/2026 a 31/12/2026',
+    itens:[
+      {competencia:'Liderança, Influência e Desenvolvimento de Pessoas',categoria:'Comportamental',situacao:'Atua como referência técnica e funcional, influenciando decisões e apoiando outros analistas de forma informal, porém sem atuação formal como líder.',objetivo:'Fortalecer competências de liderança para estar preparado para assumir uma posição formal assim que surgir oportunidade, atuando de forma estruturada na tomada de decisão, priorização e orientação do time.',acao:'- Atuar como referência técnica em projetos estratégicos - Apoiar analistas em decisões críticas e direcionamento de soluções - Participar de discussões de priorização e definição de estratégias da área - Receber feedback recorrente do gestor com foco em postura de liderança',tipo:'On the Job / Mentoria',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Reconhecimento do papel de liderança pelo time e gestão, com capacidade comprovada de assumir responsabilidades adicionais.',avaliacao:'Feedback do gestor, pares e stakeholders-chave.',status:'Em andamento',resultado:'Analista preparado para assumir posição de liderança formal quando houver oportunidade.',obs:''},
+      {competencia:'Atuação em Projetos  - Projeto de Disponibilização do GFP no ambiente CLK Granja (UHV Bradesco)',categoria:'Técnica',situacao:'Experiência sólida em projetos complexos, com  entendimento de integrações, requisitos funcionais e limitações de ambiente.',objetivo:'Garantir a disponibilização e funcionamento de uma ferramenta para uma operação que atua em outra infraestrutura e ambiente tecnológico, atendendo às necessidades operacionais e de negócio do cliente.',acao:'- Levantar requisitos técnicos e operacionais do ambiente do cliente - Mapear gaps entre a ferramenta atual e a infraestrutura destino - Definir, junto à TI e demais áreas, as adequações necessárias - Conduzir testes, validações e acompanhamento da operação após disponibilização',tipo:'Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Conforme cronograma do projeto',indicador:'Ferramenta operando corretamente no novo ambiente, sem impacto crítico à operação.',avaliacao:'Validação técnica, feedback do cliente e acompanhamento pós-implantação.',status:'Em andamento',resultado:'Solução estável, segura e aderente ao ambiente do cliente, fortalecendo a credibilidade técnica da empresa.',obs:''},
+      {competencia:'Entrega dos Itens do Novo Contrato da Daycoval com Reestruturação do Modelo de Atendimento',categoria:'Negócio',situacao:'Boa experiência em projetos e relacionamento com clientes, com conhecimento dos modelos operacionais atuais.',objetivo:'Garantir a entrega dos itens previstos no novo contrato do cliente, com foco principal na reestruturação do modelo de atendimento, incluindo mudança de SLAs, prioridades e cargos.',acao:'- Analisar o novo contrato e seus impactos operacionais - Redesenhar o modelo de atendimento (TO BE) considerando:    - SLAs e Prioridades    - Estrutura de cargos e responsabilidades - Validar o novo modelo com áreas internas e com o cliente - Acompanhar a implantação e ajustes pós-go-live',tipo:'Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Conforme marcos contratuais',indicador:'Novo modelo de atendimento implantado e aderente ao contrato, com aprovação do cliente.',avaliacao:'Validação contratual, feedback do cliente e acompanhamento de indicadores operacionais.',status:'Em andamento',resultado:'Atendimento alinhado ao novo contrato, mitigando riscos contratuais e elevando a maturidade operacional.',obs:''},
+      {competencia:'Fortalecer a Visão de Negócio e Pensamento Estratégico',categoria:'Negócio',situacao:'O time possui forte capacidade de execução e análise, porém há oportunidades na hora de demonstrar de forma estruturada o impacto no negócio, operação ou cliente em cada projeto ou demanda.',objetivo:'Desenvolver uma atuação orientada ao negócio, garantindo que todas as entregas considerem e comuniquem claramente o impacto operacional, estratégico e para o cliente.',acao:'- Identificar e registrar o impacto de negócio em todas as demandas e projetos - Incluir, nas documentações e apresentações, um campo padrão de “Impacto no Negócio” - Conduzir alinhamentos considerando riscos, impactos e prioridades do negócio',tipo:'On the Job / Rotina de Trabalho',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Demandas mais bem priorizadas, redução de retrabalho e melhor alinhamento com gestores, clientes e Diretoria.',avaliacao:'Feedback da gestão, clareza nas apresentações e decisões mais rápidas em fóruns de alinhamento.',status:'Em andamento',resultado:'Time reconhecido pela maturidade de negócio e capacidade de atuar além da execução técnica.',obs:''},
+      {competencia:'Análise Financeira e Tomada de Decisão Orientada a Valor',categoria:'Negócio',situacao:'O time possui foco em escopo, prazo e solução, com oportunidade de fortalecer a análise de custos, benefícios e impacto financeiro das iniciativas.',objetivo:'Desenvolver a capacidade de construir business cases simples e objetivos, trazendo visão de impacto financeiro para apoiar decisões estratégicas e priorização de projetos.',acao:'- Identificar, para projetos e grandes demandas:    - Custos estimados (esforço, licenças, fornecedores, tempo)    - Benefícios esperados (redução de custo, eficiência, mitigação de risco, receita) - Construir business cases simplificados para apoio à decisão - Comunicar impacto financeiro em fóruns de alinhamento e acompanhamento',tipo:'On the Job / Prática de Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Projetos priorizados com base em valor e impacto financeiro, com maior apoio da gestão e Diretoria.',avaliacao:'Qualidade dos business cases apresentados e feedback da liderança.',status:'Em andamento',resultado:'Time atuando como parceiro estratégico do negócio, com discurso alinhado ao nível executivo.',obs:''},
+    ],
+  }},
+  'SAMUEL_PINTO': {
+    colaborador:'SAMUEL ANTONIO PINTO', cargo:'ANALISTA DE SOLÇÕES OPERACIONAIS I', gestor:'FERNANDO SOUZA FRANCO',
+    area:'NEGÓCIOS - SP', ciclo:'6 MESES', periodo:'de 01/05/2026 a 31/12/2026',
+    itens:[
+      {competencia:'Evolução do Perfil Técnico para Analista de Negócio',categoria:'Negócio',situacao:'Profissional com alto domínio técnico e de automação, que tende naturalmente a direcionar soluções para execução técnica direta, com necessidade de evoluir seu skill para análise, priorização e garantia de entrega orientada ao negócio.',objetivo:'Desenvolver a atuação como Analista de Negócio, fortalecendo a capacidade de analisar demandas, estruturar requisitos, gerenciar entregas e atuar como ponte entre negócio e tecnologia, reduzindo a dependência de atuação técnica direta.',acao:'- Atuar na condução de demandas como Analista de Negócio, focando em:    - Entendimento do problema    - Definição de escopo    - Priorização e impacto - Elaborar documentações funcionais (AS IS / TO BE, requisitos, fluxos) - Apoiar decisões técnicas sem executar a solução diretamente',tipo:'On the Job / Mentoria',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Demandas conduzidas com clareza de escopo, prazos e impacto, com entregas realizadas pelos times técnicos sem necessidade de intervenção direta do analista na execução.',avaliacao:'Feedback do gestor e dos times envolvidos nas entregas.',status:'Em andamento',resultado:'Transição bem-sucedida do perfil técnico para Analista de Negócio, mantendo o conhecimento técnico como diferencial estratégico.',obs:''},
+      {competencia:'Atuação em Projetos  - Projeto de Integração de AD CLK e CLK-FIS',categoria:'Técnica',situacao:'Alto conhecimento técnico em integrações e automações, com menor experiência formal na atuação de projetos interdependentes entre múltiplos ambientes e infraestruturas.',objetivo:'Atuar como Analista de Negócio no projeto de integração de Active Directory (AD) entre dois ambientes distintos da empresa, garantindo alinhamento entre requisitos de negócio, segurança, governança e viabilidade técnica.',acao:'- Levantar requisitos de negócio e operacionais da unificação dos ADs - Mapear diferenças entre infraestruturas, ambientes e políticas - Traduzir necessidades em requisitos funcionais para os times técnicos - Apoiar decisões técnicas com visão de impacto e risco - Acompanhar testes, validações e implantação',tipo:'Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Conforme Cronograma',indicador:'Integração realizada com sucesso, atendendo requisitos de negócio e segurança, sem impactos críticos aos usuários ou operações.',avaliacao:'Validação do projeto, feedback do time técnico e do gestor.',status:'Em andamento',resultado:'Projeto entregue com sucesso e consolidação do analista como referência em integrações do ponto de vista de negócio.',obs:''},
+      {competencia:'Fortalecer a Visão de Negócio e Pensamento Estratégico',categoria:'Negócio',situacao:'O time possui forte capacidade de execução e análise, porém há oportunidades na hora de demonstrar de forma estruturada o impacto no negócio, operação ou cliente em cada projeto ou demanda.',objetivo:'Desenvolver uma atuação orientada ao negócio, garantindo que todas as entregas considerem e comuniquem claramente o impacto operacional, estratégico e para o cliente.',acao:'- Identificar e registrar o impacto de negócio em todas as demandas e projetos - Incluir, nas documentações e apresentações, um campo padrão de “Impacto no Negócio” - Conduzir alinhamentos considerando riscos, impactos e prioridades do negócio',tipo:'On the Job / Rotina de Trabalho',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Demandas mais bem priorizadas, redução de retrabalho e melhor alinhamento com gestores, clientes e Diretoria.',avaliacao:'Feedback da gestão, clareza nas apresentações e decisões mais rápidas em fóruns de alinhamento.',status:'Em andamento',resultado:'Time reconhecido pela maturidade de negócio e capacidade de atuar além da execução técnica.',obs:''},
+      {competencia:'Análise Financeira e Tomada de Decisão Orientada a Valor',categoria:'Negócio',situacao:'O time possui foco em escopo, prazo e solução, com oportunidade de fortalecer a análise de custos, benefícios e impacto financeiro das iniciativas.',objetivo:'Desenvolver a capacidade de construir business cases simples e objetivos, trazendo visão de impacto financeiro para apoiar decisões estratégicas e priorização de projetos.',acao:'- Identificar, para projetos e grandes demandas:    - Custos estimados (esforço, licenças, fornecedores, tempo)    - Benefícios esperados (redução de custo, eficiência, mitigação de risco, receita) - Construir business cases simplificados para apoio à decisão - Comunicar impacto financeiro em fóruns de alinhamento e acompanhamento',tipo:'On the Job / Prática de Projeto',responsavel:'Analista',prioridade:'Alta',prazo:'Contínuo',indicador:'Projetos priorizados com base em valor e impacto financeiro, com maior apoio da gestão e Diretoria.',avaliacao:'Qualidade dos business cases apresentados e feedback da liderança.',status:'Em andamento',resultado:'Time atuando como parceiro estratégico do negócio, com discurso alinhado ao nível executivo.',obs:''},
+    ],
+  }},
+};
+
+// ── ESTADO ───────────────────────────────────────────────────────────────────
+let employees = [];
+let sortCol = 'NOME', sortDir = 1, calYear, calMonth;
+const COLORS=[{bg:'#2563eb',text:'#eff6ff'},{bg:'#7c3aed',text:'#f5f3ff'},{bg:'#059669',text:'#ecfdf5'},{bg:'#d97706',text:'#fffbeb'},{bg:'#db2777',text:'#fdf2f8'},{bg:'#0891b2',text:'#ecfeff'},{bg:'#65a30d',text:'#f7fee7'},{bg:'#dc2626',text:'#fef2f2'}];
+const AVCOL=[{bg:'#dbeafe',text:'#1e40af'},{bg:'#f5f3ff',text:'#6d28d9'},{bg:'#d1fae5',text:'#065f46'},{bg:'#fef3c7',text:'#92400e'},{bg:'#fce7f3',text:'#9d174d'},{bg:'#e0f2fe',text:'#075985'}];
+const gc=i=>COLORS[i%COLORS.length];
+const ac=i=>AVCOL[i%AVCOL.length];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function toDate(s){if(!s)return null;const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function fmtDate(s){if(!s)return'—';return toDate(s).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function fmtBday(s){if(!s)return'—';return new Date(s+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});}
+function nomeCurto(n){if(!n)return'';const p=n.trim().split(' ');return p[0]+(p.length>1?' '+p[p.length-1]:'');}
+function daysBetween(a,b){return Math.round((b-a)/86400000)+1;}
+function initials(n){const p=n.trim().split(' ');return(p[0][0]+(p[p.length-1][0])).toUpperCase();}
+
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────────────────────
+function switchSection(name){
+  document.querySelectorAll('[id^="nav-"]').forEach(t=>t.classList.remove('active'));
+  document.getElementById('nav-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar-subnav').forEach(s=>s.style.display='none');
+  const sub=document.getElementById(name+'-subnav');
+  if(sub) sub.style.display='block';
+  const first=sub&&sub.querySelector('.sidebar-item');
+  if(first) switchTab(first.id.replace('tab-',''));
+}
+
+function switchTab(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const panel=document.getElementById('panel-'+name);
+  if(panel) panel.classList.add('active');
+  document.querySelectorAll('.sidebar-subnav .sidebar-item').forEach(t=>t.classList.remove('active'));
+  const tab=document.getElementById('tab-'+name);
+  if(tab) tab.classList.add('active');
+  if(name==='aniv-cards') renderAnivCards();
+  if(name==='aniv-tabela') renderAnivTable();
+  if(name==='aniv-timeline') renderAnivTimeline();
+  if(name==='rdm-calc') setTimeout(calcRDM,100);
+  if(name==='escala-mensal') renderEscalaMensal();
+  if(name==='escala-lista') renderEscalaLista();
+  if(name==='pdi-meu') renderPdiMeu();
+  if(name==='pdi-resumo') renderPdiResumo();
+  window.scrollTo(0,0);
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim().toLowerCase();
+  const p=document.getElementById('login-pass').value;
+  const found=USERS.find(x=>x.user===u&&x.pass===p);
+  if(!found){document.getElementById('login-error').style.display='block';return;}
+  currentUser=found;
+  document.getElementById('login-overlay').style.display='none';
+  document.getElementById('user-pill').style.display='flex';
+  document.getElementById('user-av').textContent=found.nome.split(' ').map(w=>w[0]).slice(0,2).join('');
+  document.getElementById('user-name-pill').textContent=found.nome.split(' ')[0];
+  if(found.role==='gestor'){
+    document.getElementById('tab-pdi-resumo').style.display='flex';
+    document.getElementById('pdi-tab-label').textContent='Ver por Analista';
+  }
+  // vai para seção pendente se houver
+  if(window._loginTarget){
+    const t=window._loginTarget; window._loginTarget=null;
+    if(t==='rdm-regras'){ switchTab('rdm-regras'); }
+    else { switchSection(t); }
+  }
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById('login-overlay').style.display='none';
+  document.getElementById('user-pill').style.display='none';
+  document.getElementById('tab-pdi-resumo').style.display='none';
+  document.getElementById('pdi-tab-label').textContent='Meu PDI';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').style.display='none';
+  // volta para férias
+  switchSection('ferias');
+}
+
+function closeLogin(){
+  document.getElementById('login-overlay').style.display='none';
+  document.getElementById('login-error').style.display='none';
+}
+
+// ── PDI CLICK: pede login se necessário ──────────────────────────────────────
+function onPdiClick(){
+  if(!currentUser){
+    document.getElementById('login-overlay').style.display='flex';
+    document.getElementById('login-msg').textContent='Plano de Desenvolvimento Individual';
+    document.getElementById('login-sub').textContent='Por analista — insira seu usuário e senha para acessar as suas informações';
+    document.getElementById('login-user').focus();
+    window._loginTarget = 'pdi';
+    return;
+  }
+  switchSection('pdi');
+}
+
+function onRdmClick(){
+  switchSection('rdm');
+}
+
+function onEscalaClick(){
+  if(!currentUser){
+    document.getElementById('login-overlay').style.display='flex';
+    document.getElementById('login-msg').textContent='🔒 Área Restrita';
+    document.getElementById('login-sub').textContent='Insira seu usuário e senha para acessar.';
+    document.getElementById('login-user').focus();
+    window._loginTarget='escala';
+    return;
+  }
+  switchSection('escala');
+}
+
+function onRegrasClick(){
+  if(!currentUser || currentUser.role !== 'gestor'){
+    document.getElementById('login-overlay').style.display='flex';
+    document.getElementById('login-msg').textContent='⚠️ Acesso Restrito — Gestão';
+    document.getElementById('login-sub').textContent='As regras de RDM são restritas à gestão. Insira suas credenciais para acessar.';
+    document.getElementById('login-user').focus();
+    window._loginTarget = 'rdm-regras';
+    return;
+  }
+  switchTab('rdm-regras');
+}
+
+// ── TOOLTIP ───────────────────────────────────────────────────────────────────
+function showTip(e,name,period,cargo,obs){
+  const t=document.getElementById('tooltip');
+  document.getElementById('tip-name').textContent=nomeCurto(name);
+  document.getElementById('tip-period').textContent=period;
+  document.getElementById('tip-cargo').textContent=cargo;
+  document.getElementById('tip-obs').textContent=obs;
+  t.style.display='block';moveTip(e);
+}
+function showTipSimple(e,text){
+  const t=document.getElementById('tooltip');
+  document.getElementById('tip-name').textContent=text;
+  ['tip-period','tip-cargo','tip-obs'].forEach(id=>document.getElementById(id).textContent='');
+  t.style.display='block';moveTip(e);
+}
+function moveTip(e){const t=document.getElementById('tooltip');t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY+14)+'px';}
+function hideTip(){document.getElementById('tooltip').style.display='none';}
+document.addEventListener('mousemove',moveTip);
+
+// ── FÉRIAS: SUMMARY ───────────────────────────────────────────────────────────
+function renderSummary(){
+  const today=new Date();today.setHours(0,0,0,0);
+  let emFerias=0,pendentes=0,proximos=0;
+  employees.forEach(e=>{
+    const s1=toDate(e.FERIAS1_INICIO),f1=toDate(e.FERIAS1_FIM),s2=toDate(e.FERIAS2_INICIO),f2=toDate(e.FERIAS2_FIM);
+    if((s1&&f1&&today>=s1&&today<=f1)||(s2&&f2&&today>=s2&&today<=f2))emFerias++;
+    if(e.dias_pendentes>0)pendentes++;
+    const d1=s1?(s1-today)/86400000:Infinity,d2=s2?(s2-today)/86400000:Infinity;
+    if(Math.min(d1,d2)>0&&Math.min(d1,d2)<=30)proximos++;
+  });
+  const tp=employees.reduce((a,e)=>a+(e.dias_pendentes||0),0);
+  document.getElementById('summary-cards').innerHTML=[
+    {label:'Total',value:employees.length,sub:'colaboradores',cls:'blue'},
+    {label:'Em Férias Hoje',value:emFerias,sub:'afastados',cls:'purple'},
+    {label:'Próximos 30 dias',value:proximos,sub:'iniciam em breve',cls:'amber'},
+    {label:'Dias Pendentes',value:tp,sub:pendentes+' colaboradores',cls:'green'},
+  ].map(c=>`<div class="card ${c.cls}"><div class="card-label">${c.label}</div><div class="card-value">${c.value}</div><div class="card-sub">${c.sub}</div></div>`).join('');
+}
+
+// ── FÉRIAS: TIMELINE ──────────────────────────────────────────────────────────
+function renderTimeline(){
+  const TL_START=new Date(2025,11,1),TL_END=new Date(2026,7,31);
+  const totalDays=daysBetween(TL_START,TL_END);
+  const today=new Date();today.setHours(0,0,0,0);
+  const NAME_W=180;
+  let months=[],cur=new Date(TL_START);
+  while(cur<=TL_END){months.push(new Date(cur));cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);}
+  const pct=d=>(Math.max(0,Math.min(totalDays,daysBetween(TL_START,d)-1))/totalDays*100).toFixed(3);
+  const pctW=(s,f)=>(daysBetween(new Date(Math.max(s,TL_START)),new Date(Math.min(f,TL_END)))/totalDays*100).toFixed(3);
+  const gs=`grid-template-columns:${NAME_W}px 1fr`;
+  document.getElementById('tl-header').style=gs;
+  document.getElementById('tl-header').innerHTML=`<div style="padding:9px 1rem">Colaborador</div><div style="position:relative;height:30px">${months.map(m=>`<div class="month-tick" style="left:${pct(m)}%"></div><div class="month-label" style="left:${pct(m)}%">${m.toLocaleDateString('pt-BR',{month:'short'}).toUpperCase()}<br><span style="font-size:9px">${m.getFullYear()}</span></div>`).join('')}</div>`;
+  const tp=pct(today),tv=today>=TL_START&&today<=TL_END;
+  document.getElementById('tl-rows').innerHTML=employees.map((e,idx)=>{
+    const col=gc(idx);
+    function bar(s,f,cls){
+      if(!s||!f)return'';const sd=toDate(s),fd=toDate(f);if(!sd||!fd)return'';
+      const w=pctW(sd,fd);if(parseFloat(w)<=0)return'';
+      const now=new Date();now.setHours(0,0,0,0);
+      const lbl=now>fd?'Realizada':now>=sd?'🏖 Em férias':'Programada';
+      const op=now>fd?'0.55':'1';
+      return `<div class="tl-bar ${cls}" style="left:${pct(sd)}%;width:${w}%;background:${col.bg};opacity:${op}" onmouseenter="showTip(event,'${e.NOME}','${fmtDate(s)} → ${fmtDate(f)}','${e.CARGO}','${e.OBS}')" onmouseleave="hideTip()"></div><div class="tl-bar-label ${cls}" style="left:${pct(sd)}%">${lbl}</div>`;
+    }
+    return `<div class="tl-row" style="${gs}"><div class="tl-name"><strong>${nomeCurto(e.NOME)}</strong><span>${e.CARGO}</span></div><div class="tl-chart">${months.map(m=>`<div class="month-tick" style="left:${pct(m)}%"></div>`).join('')}${tv?`<div class="today-line" style="left:${tp}%"></div>`:''}${bar(e.FERIAS1_INICIO,e.FERIAS1_FIM,'p1')}${bar(e.FERIAS2_INICIO,e.FERIAS2_FIM,'p2')}</div></div>`;
+  }).join('');
+}
+
+// ── FÉRIAS: TABELA ────────────────────────────────────────────────────────────
+function renderTable(){
+  const search=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const cargo=document.getElementById('cargo-filter')?.value||'';
+  let rows=[...employees].filter(e=>{
+    if(search&&!e.NOME.toLowerCase().includes(search))return false;
+    if(cargo&&e.CARGO!==cargo)return false;
+    return true;
+  }).sort((a,b)=>{
+    const va=sortCol==='dias_pendentes'?a.dias_pendentes:(a[sortCol]||'');
+    const vb=sortCol==='dias_pendentes'?b.dias_pendentes:(b[sortCol]||'');
+    return va<vb?-sortDir:va>vb?sortDir:0;
+  });
+  const body=document.getElementById('table-body');
+  if(!rows.length){body.innerHTML='<tr><td colspan="7" class="empty-msg">Nenhum resultado.</td></tr>';return;}
+  body.innerHTML=rows.map(e=>`<tr>
+    <td><div style="font-weight:500">${nomeCurto(e.NOME)}</div><div class="drt-mono">${e.DRT}</div></td>
+    <td><span class="badge ${e.CARGO==='GERENTE'?'blue':'gray'}">${e.CARGO}</span></td>
+    <td>${e.FERIAS1_INICIO?fmtDate(e.FERIAS1_INICIO)+' → '+fmtDate(e.FERIAS1_FIM):'—'}</td>
+    <td>${e.FERIAS2_INICIO?fmtDate(e.FERIAS2_INICIO)+' → '+fmtDate(e.FERIAS2_FIM):'—'}</td>
+    <td style="color:#4a5272;font-size:12px">${e.OBS||'—'}</td>
+    <td>${e.dias_pendentes>0?`<span class="badge amber">⚠ ${e.dias_pendentes}d</span>`:'<span class="badge green">✓ OK</span>'}</td>
+    <td><span class="badge green">✓ ${e.AGENDADA}</span></td>
+  </tr>`).join('');
+}
+function filterTable(){renderTable();}
+function sortTable(col){sortCol===col?sortDir*=-1:(sortCol=col,sortDir=1);renderTable();}
+
+// ── FÉRIAS: CALENDÁRIO ────────────────────────────────────────────────────────
+function populateCalFilter(){
+  const sel=document.getElementById('cal-filter');
+  employees.forEach(e=>{const o=document.createElement('option');o.value=e.NOME;o.textContent=nomeCurto(e.NOME);sel.appendChild(o);});
+}
+function calNav(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function renderCalendar(){
+  const fn=document.getElementById('cal-filter')?.value||'';
+  const today=new Date();today.setHours(0,0,0,0);
+  const label=new Date(calYear,calMonth,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  document.getElementById('cal-month-label').textContent=label.charAt(0).toUpperCase()+label.slice(1);
+  const firstDay=new Date(calYear,calMonth,1),lastDay=new Date(calYear,calMonth+1,0);
+  let cells=[];const sdow=firstDay.getDay();
+  for(let i=sdow-1;i>=0;i--)cells.push({date:new Date(calYear,calMonth,-i),other:true});
+  for(let d=1;d<=lastDay.getDate();d++)cells.push({date:new Date(calYear,calMonth,d),other:false});
+  while(cells.length%7!==0)cells.push({date:new Date(calYear,calMonth+1,cells.length-lastDay.getDate()-sdow+1),other:true});
+  function getEvs(date){const evs=[];employees.forEach((e,idx)=>{if(fn&&e.NOME!==fn)return;[[e.FERIAS1_INICIO,e.FERIAS1_FIM],[e.FERIAS2_INICIO,e.FERIAS2_FIM]].forEach(([s,f])=>{if(!s||!f)return;const sd=toDate(s),fd=toDate(f);if(date>=sd&&date<=fd)evs.push({name:nomeCurto(e.NOME),col:gc(idx)});});});return evs;}
+  const weeks=[];for(let i=0;i<cells.length;i+=7)weeks.push(cells.slice(i,i+7));
+  const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html=`<div class="cal-days-header">${days.map(d=>`<div class="cal-day-name">${d}</div>`).join('')}</div><div class="cal-weeks">`;
+  html+=weeks.map(week=>`<div class="cal-week">${week.map(cell=>{const isT=cell.date.getTime()===today.getTime();const evs=getEvs(cell.date);return`<div class="cal-cell ${cell.other?'other-month':''} ${isT?'today':''}"><div class="cal-date">${isT?`<div class="today-badge">${cell.date.getDate()}</div>`:`<span>${cell.date.getDate()}</span>`}</div>${evs.map(ev=>`<div class="cal-event" style="background:${ev.col.bg};color:${ev.col.text}" onmouseenter="showTipSimple(event,'${ev.name}')" onmouseleave="hideTip()">${ev.name}</div>`).join('')}</div>`;}).join('')}</div>`).join('');
+  html+='</div>';
+  document.getElementById('calendar-grid').innerHTML=html;
+  document.getElementById('cal-legend').innerHTML=(fn?employees.filter(e=>e.NOME===fn):employees).map((e,i)=>{const c=gc(employees.indexOf(e));return`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#4a5272"><div style="width:10px;height:10px;border-radius:3px;background:${c.bg}"></div>${nomeCurto(e.NOME)}</div>`;}).join('');
+}
+
+// ── ANIVERSÁRIO ───────────────────────────────────────────────────────────────
+function anivSC(s){return s==='FOLGA REALIZADA'?'status-realizada':s==='PENDENTE AGENDAR'?'status-pendente':'status-afazer';}
+function anivBadge(s){if(s==='FOLGA REALIZADA')return'<span class="badge green">✓ Realizada</span>';if(s==='PENDENTE AGENDAR')return'<span class="badge amber">⏳ Pendente</span>';return'<span class="badge blue">📅 A fazer</span>';}
+function getBM(s){return s?new Date(s+'T00:00:00').getMonth():-1;}
+function fmtF(s){if(!s||s==='-')return'—';return fmtDate(s);}
+
+function renderAnivSummary(){
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const r=ANIV_DATA.filter(e=>e.STATUS==='FOLGA REALIZADA').length;
+  const p=ANIV_DATA.filter(e=>e.STATUS==='PENDENTE AGENDAR').length;
+  const a=ANIV_DATA.filter(e=>e.STATUS==='ANIVERSÁRIO A FAZER').length;
+  let prox=null,pd=999;
+  ANIV_DATA.forEach(e=>{if(!e.ANIVERSARIO)return;const d=new Date(e.ANIVERSARIO+'T00:00:00');let next=new Date(hoje.getFullYear(),d.getMonth(),d.getDate());if(next<hoje)next=new Date(hoje.getFullYear()+1,d.getMonth(),d.getDate());const diff=Math.round((next-hoje)/86400000);if(diff<pd){pd=diff;prox=e;}});
+  let html=[{label:'Total',value:ANIV_DATA.length,sub:'colaboradores',cls:'blue'},{label:'Realizada',value:r,sub:'concluídas',cls:'green'},{label:'Pendente',value:p,sub:'aguardando',cls:'amber'},{label:'A Fazer',value:a,sub:'no ano',cls:'purple'}].map(c=>`<div class="card ${c.cls}"><div class="card-label">${c.label}</div><div class="card-value">${c.value}</div><div class="card-sub">${c.sub}</div></div>`).join('');
+  if(prox)html+=`<div class="card blue"><div class="card-label">Próximo Aniversário</div><div class="card-value" style="font-size:16px">${nomeCurto(prox.NOME)}</div><div class="card-sub">${fmtBday(prox.ANIVERSARIO)} · em ${pd}d</div></div>`;
+  document.getElementById('aniv-summary').innerHTML=html;
+}
+
+function renderAnivCards(){
+  renderAnivSummary();
+  document.getElementById('aniv-cards-grid').innerHTML=[...ANIV_DATA].sort((a,b)=>getBM(a.ANIVERSARIO)-getBM(b.ANIVERSARIO)).map((e,i)=>{const col=ac(i);return`<div class="aniv-card ${anivSC(e.STATUS)}"><div style="display:flex;align-items:center;gap:10px"><div class="aniv-avatar" style="background:${col.bg};color:${col.text}">${initials(e.NOME)}</div><div><div class="aniv-name">${nomeCurto(e.NOME)}</div><div class="aniv-bday">🎂 ${fmtBday(e.ANIVERSARIO)} · ${e.MES}</div></div></div><div class="aniv-info-row"><span>Data da folga</span><span style="font-weight:600">${fmtF(e.DATA_FOLGA)}</span></div><div class="aniv-info-row" style="border-top:none;padding-top:0;margin-top:-4px"><span>Status</span>${anivBadge(e.STATUS)}</div>${e.COMENTARIOS?`<div class="aniv-comment">💬 ${e.COMENTARIOS}</div>`:''}</div>`;}).join('');
+}
+
+function renderAnivTable(){
+  const search=(document.getElementById('aniv-search')?.value||'').toLowerCase();
+  const status=document.getElementById('aniv-status-filter')?.value||'';
+  const rows=ANIV_DATA.filter(e=>{if(search&&!e.NOME.toLowerCase().includes(search))return false;if(status&&e.STATUS!==status)return false;return true;}).sort((a,b)=>getBM(a.ANIVERSARIO)-getBM(b.ANIVERSARIO));
+  const body=document.getElementById('aniv-table-body');
+  if(!rows.length){body.innerHTML='<tr><td colspan="6" class="empty-msg">Nenhum resultado.</td></tr>';return;}
+  body.innerHTML=rows.map(e=>{const col=ac(ANIV_DATA.indexOf(e));return`<tr><td><div style="display:flex;align-items:center;gap:9px"><div class="aniv-avatar" style="width:30px;height:30px;font-size:11px;background:${col.bg};color:${col.text}">${initials(e.NOME)}</div><span style="font-weight:500">${nomeCurto(e.NOME)}</span></div></td><td>${fmtF(e.ANIVERSARIO)}</td><td style="color:#4a5272">${e.MES}</td><td>${fmtF(e.DATA_FOLGA)}</td><td>${anivBadge(e.STATUS)}</td><td style="font-size:12px;color:#8b92b0;font-style:italic">${e.COMENTARIOS||'—'}</td></tr>`;}).join('');
+}
+
+function renderAnivTimeline(){
+  const MESES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const ma=new Date().getMonth();
+  const bm=Array.from({length:12},()=>[]);
+  ANIV_DATA.forEach((e,i)=>{const m=getBM(e.ANIVERSARIO);if(m>=0)bm[m].push({...e,idx:i});});
+  document.getElementById('aniv-year-track').innerHTML=`<div class="ayt-months">${MESES.map((m,mi)=>{const people=bm[mi];return`<div class="ayt-month ${mi===ma?'current':''}"><div class="ayt-month-label">${m}</div>${people.map(e=>{const col=ac(e.idx);const d=new Date(e.ANIVERSARIO+'T00:00:00').getDate();return`<div class="ayt-person" style="background:${col.bg};color:${col.text}" onmouseenter="showTipSimple(event,'${nomeCurto(e.NOME)} — dia ${d}')" onmouseleave="hideTip()">${nomeCurto(e.NOME).split(' ')[0]}<span class="ayt-day">dia ${d}</span></div>`;}).join('')}</div>`;}).join('')}</div>`;
+}
+
+// ── PDI ───────────────────────────────────────────────────────────────────────
+function pdiColor(s){if(s==='Concluído')return'#059669';if(s==='Em andamento')return'#2563eb';if(s==='Planejado')return'#d97706';if(s==='Cancelado')return'#dc2626';return'#8b92b0';}
+function pdiStatusBadge(s){const c=pdiColor(s);return`<span class="badge" style="background:${c}18;color:${c}">${s||'—'}</span>`;}
+function catCls(c){c=(c||'').toLowerCase();if(c.includes('técn')||c.includes('tecn'))return'cat-tecnica';if(c.includes('neg'))return'cat-negocio';return'cat-comportamental';}
+
+function renderPdiItens(sheetKey){
+  const data=PDI_DATA[sheetKey];
+  if(!data){document.getElementById('pdi-cards-list').innerHTML='<div class="empty-msg">PDI não encontrado.</div>';return;}
+  // Só atualiza header se NÃO for gestor (gestor tem header fixo com seletor)
+  if(!currentUser||currentUser.role!=='gestor'){
+    document.getElementById('pdi-header-box').innerHTML=`<div><h3>${data.colaborador}</h3><p>${data.cargo} · Gestor: ${data.gestor}</p><div class="pdi-meta"><span class="pdi-meta-tag">📍 ${data.area}</span><span class="pdi-meta-tag">🔄 ${data.ciclo}</span><span class="pdi-meta-tag">📅 ${data.periodo}</span></div></div>`;
+  }
+  document.getElementById('pdi-cards-list').innerHTML=data.itens.map((it,i)=>`<div class="pdi-card"><div class="pdi-card-hdr" onclick="togglePdi(${i})"><div class="pdi-card-title">${it.competencia}</div><div class="pdi-card-meta"><span class="cat-badge ${catCls(it.categoria)}">${it.categoria}</span>${pdiStatusBadge(it.status)}<span class="pdi-dot" style="background:${pdiColor(it.status)}"></span><span class="pdi-chev" id="chev-${i}">▼</span></div></div><div class="pdi-card-body" id="pbody-${i}"><div class="pdi-grid"><div class="pdi-field full"><label>Situação Atual</label><p>${it.situacao}</p></div><div class="pdi-field full"><label>Objetivo do Desenvolvimento</label><p>${it.objetivo}</p></div><div class="pdi-field full"><label>Ação de Desenvolvimento</label><p>${it.acao}</p></div><div class="pdi-field"><label>Tipo de Ação</label><p>${it.tipo}</p></div><div class="pdi-field"><label>Responsável</label><p>${it.responsavel}</p></div><div class="pdi-field"><label>Prioridade</label><p>${it.prioridade}</p></div><div class="pdi-field"><label>Prazo</label><p>${it.prazo}</p></div><div class="pdi-field full"><label>Indicador de Sucesso</label><p>${it.indicador}</p></div><div class="pdi-field full"><label>Forma de Avaliação</label><p>${it.avaliacao}</p></div><div class="pdi-field full"><label>Resultado Esperado</label><p>${it.resultado}</p></div>${it.obs?`<div class="pdi-field full"><label>Observações</label><p>${it.obs}</p></div>`:''}</div></div></div>`).join('');
+}
+
+function togglePdi(i){
+  const b=document.getElementById('pbody-'+i),c=document.getElementById('chev-'+i);
+  b.classList.toggle('open');c.classList.toggle('open');
+}
+
+function renderPdiMeu(){
+  if(!currentUser){document.getElementById('pdi-header-box').innerHTML='<p style="color:#8b92b0">Faça login para acessar o PDI.</p>';document.getElementById('pdi-cards-list').innerHTML='';return;}
+  if(currentUser.role==='gestor'){
+    const keys=Object.keys(PDI_DATA);
+    // Header com seletor FIXO — nunca é substituído pelo renderPdiItens
+    document.getElementById('pdi-header-box').innerHTML=`
+      <div><h3>PDI da Equipe</h3><p>Selecione o analista para ver o plano de desenvolvimento</p></div>
+      <div class="pdi-selector">${keys.map(k=>`<button class="pdi-sel-btn" id="pbtn-${k}" onclick="selectAnalista('${k}')">${PDI_DATA[k].colaborador.split(' ')[0]}</button>`).join('')}</div>`;
+    document.getElementById('pdi-cards-list').innerHTML='<div style="padding:2rem;text-align:center;color:#8b92b0;font-size:13px">Selecione um analista acima para ver o PDI.</div>';
+  } else {
+    renderPdiItens(currentUser.pdi);
+  }
+}
+
+function selectAnalista(key){
+  document.querySelectorAll('.pdi-sel-btn').forEach(b=>{b.style.background='';b.style.borderColor='';b.style.color='';});
+  const btn=document.getElementById('pbtn-'+key);
+  if(btn){btn.style.background='#dbeafe';btn.style.borderColor='#2563eb';btn.style.color='#2563eb';}
+  renderPdiItens(key);
+}
+
+function renderPdiResumo(){
+  const rows=[];
+  Object.values(PDI_DATA).forEach(data=>{
+    data.itens.forEach(it=>{rows.push(`<tr><td style="font-weight:500">${nomeCurto(data.colaborador)}</td><td style="font-size:12px;max-width:200px">${it.competencia}</td><td><span class="cat-badge ${catCls(it.categoria)}">${it.categoria}</span></td><td>${it.prioridade}</td><td style="font-size:12px">${it.prazo}</td><td>${pdiStatusBadge(it.status)}</td></tr>`);});
+  });
+  document.getElementById('pdi-resumo-body').innerHTML=rows.join('');
+}
+
+// ── ESCALA DATA ──────────────────────────────────────────────────────────────
+const ESCALA_DATA = {
+  'Bruno': {"2026-04-27": "férias", "2026-04-28": "férias", "2026-04-29": "férias", "2026-04-30": "férias", "2026-05-01": "férias", "2026-05-02": "férias", "2026-05-03": "férias", "2026-05-04": "férias", "2026-05-05": "férias", "2026-05-06": "férias", "2026-05-07": "férias", "2026-05-08": "férias", "2026-05-09": "férias", "2026-05-10": "férias", "2026-05-11": "férias", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "home", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "home", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "site", "2026-05-28": "home", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "home", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "home", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "home", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "home", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "home", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "site", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "home", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "site", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "home", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "site", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "home", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "site", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "home", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "home", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "home", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "home", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "home", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "home", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "home", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "home", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "home", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "home", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "home", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "home", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "home", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "home", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "home", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "home", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "home", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "home", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "home", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "home", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "site"},
+  'Camila': {"2026-04-27": "home", "2026-04-28": "site", "2026-04-29": "site", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "home", "2026-05-06": "site", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "site", "2026-05-13": "home", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "home", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "site", "2026-05-28": "site", "2026-05-29": "home", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "home", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "home", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "home", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "home", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "home", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "home", "2026-07-07": "site", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "home", "2026-07-14": "site", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "home", "2026-07-21": "site", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "home", "2026-07-28": "site", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "home", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "home", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "home", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "home", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "home", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "home", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "home", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "home", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "home", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "home", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "home", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "home", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "home", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "home", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "home", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "home", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "home", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "home", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "home", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "site"},
+  'Carol': {"2026-04-27": "site", "2026-04-28": "home", "2026-04-29": "site", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "site", "2026-05-06": "home", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "home", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "home", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "home", "2026-05-27": "site", "2026-05-28": "site", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "home", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "home", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "home", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "home", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "home", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "home", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "home", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "home", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "home", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "home", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "home", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "home", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "home", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "home", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "home", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "home", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "home", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "home", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "home", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "home", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "home", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "home", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "home", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "home", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "home", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "home", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "home", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "home", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "home", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "home", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "home", "2026-12-30": "site", "2026-12-31": "site"},
+  'Matheus': {"2026-04-27": "site", "2026-04-28": "site", "2026-04-29": "home", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "site", "2026-05-06": "site", "2026-05-07": "home", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "home", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "home", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "férias", "2026-05-26": "férias", "2026-05-27": "férias", "2026-05-28": "férias", "2026-05-29": "férias", "2026-05-30": "férias", "2026-05-31": "férias", "2026-06-01": "férias", "2026-06-02": "férias", "2026-06-03": "férias", "2026-06-04": "feriado", "2026-06-05": "férias", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "férias", "2026-06-09": "férias", "2026-06-10": "férias", "2026-06-11": "férias", "2026-06-12": "férias", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "férias", "2026-06-16": "férias", "2026-06-17": "férias", "2026-06-18": "férias", "2026-06-19": "férias", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "férias", "2026-06-23": "férias", "2026-06-24": "férias", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "home", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "site", "2026-07-08": "home", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "site", "2026-07-15": "home", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "site", "2026-07-22": "home", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "site", "2026-07-29": "home", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "site", "2026-08-05": "home", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "home", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "home", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "home", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "home", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "home", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "home", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "home", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "home", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "home", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "home", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "home", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "home", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "home", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "home", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "home", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "home", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "home", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "home", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "home", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "home", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "home", "2026-12-31": "site"},
+  'Samuel': {"2026-04-27": "site", "2026-04-28": "site", "2026-04-29": "site", "2026-04-30": "home", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "home", "2026-05-05": "site", "2026-05-06": "site", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "home", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "home", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "home", "2026-05-28": "site", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "home", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "home", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "home", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "home", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "férias", "2026-07-07": "férias", "2026-07-08": "férias", "2026-07-09": "férias", "2026-07-10": "férias", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "férias", "2026-07-14": "férias", "2026-07-15": "férias", "2026-07-16": "férias", "2026-07-17": "férias", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "férias", "2026-07-21": "férias", "2026-07-22": "férias", "2026-07-23": "férias", "2026-07-24": "férias", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "férias", "2026-07-28": "férias", "2026-07-29": "férias", "2026-07-30": "férias", "2026-07-31": "férias", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "férias", "2026-08-04": "férias", "2026-08-05": "site", "2026-08-06": "home", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "home", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "home", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "home", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "home", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "home", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "home", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "home", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "home", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "home", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "home", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "home", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "home", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "home", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "home", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "home", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "home", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "home", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "home", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "home", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "home", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "home"},
+};
+
+let escalaMes = 4, escalaAno = 2026; // começa em maio (índice 4)
+
+const ESCALA_MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const ESCALA_ANALISTAS = ['Bruno','Camila','Carol','Matheus','Samuel'];
+
+function escalaMesNav(d){
+  escalaMes += d;
+  if(escalaMes > 11){ escalaMes=0; escalaAno++; }
+  if(escalaMes < 0){ escalaMes=11; escalaAno--; }
+  renderEscalaMensal();
+}
+
+function escalaValClass(v){
+  if(!v) return 'fds';
+  const vl = v.toLowerCase();
+  if(vl==='site') return 'site';
+  if(vl==='home') return 'home';
+  if(vl.includes('férias')||vl.includes('ferias')) return 'ferias';
+  if(vl==='feriado') return 'feriado';
+  return 'fds';
+}
+
+function escalaValLabel(v){
+  if(!v) return '';
+  const vl = v.toLowerCase();
+  if(vl==='site') return 'Site';
+  if(vl==='home') return 'HO';
+  if(vl.includes('férias')||vl.includes('ferias')) return 'Fér';
+  if(vl==='feriado') return 'Fer!';
+  return vl;
+}
+
+function renderEscalaMensal(){
+  const label = ESCALA_MESES[escalaMes] + ' ' + escalaAno;
+  document.getElementById('escala-month-label').textContent = label;
+  const filtro = document.getElementById('escala-analista-filter')?.value || '';
+  const analistas = filtro ? [filtro] : ESCALA_ANALISTAS;
+
+  // Dias do mês
+  const diasMes = [];
+  const d = new Date(escalaAno, escalaMes, 1);
+  while(d.getMonth() === escalaMes){
+    diasMes.push(new Date(d));
+    d.setDate(d.getDate()+1);
+  }
+
+  const diasSemana = ['D','S','T','Q','Q','S','S'];
+
+  let html = '<table class="escala-table"><thead><tr>';
+  html += '<th class="nome-col">Analista</th>';
+  diasMes.forEach(dia => {
+    const dow = dia.getDay();
+    const isFds = dow === 0 || dow === 6;
+    html += `<th class="${isFds?'fds':''}">${dia.getDate()}<br><span style="font-size:9px;opacity:.7">${diasSemana[dow]}</span></th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  analistas.forEach(nome => {
+    html += `<tr><td class="nome-col">${nome}</td>`;
+    diasMes.forEach(dia => {
+      const key = `${dia.getFullYear()}-${String(dia.getMonth()+1).padStart(2,'0')}-${String(dia.getDate()).padStart(2,'0')}`;
+      const val = ESCALA_DATA[nome]?.[key] || '';
+      const cls = escalaValClass(val);
+      const dow = dia.getDay();
+      const isFds = dow === 0 || dow === 6;
+      html += `<td class="${isFds&&!val?'fds':cls}">${escalaValLabel(val)}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('escala-table-wrap').innerHTML = html;
+}
+
+// Filtro ativo por analista: null = todos
+const escalaFiltroAtivo = {};
+
+function setEscalaFiltro(nome, tipo){
+  escalaFiltroAtivo[nome] = escalaFiltroAtivo[nome] === tipo ? null : tipo;
+  renderEscalaListaCard(nome);
+}
+
+function renderEscalaListaCard(nome){
+  const filtroMes = document.getElementById('escala-lista-mes')?.value || '';
+  const idx = ESCALA_ANALISTAS.indexOf(nome);
+  const col = ['#2563eb','#7c3aed','#059669','#d97706','#db2777'][idx];
+  const dados = ESCALA_DATA[nome] || {};
+  let dias = Object.entries(dados);
+  if(filtroMes) dias = dias.filter(([k]) => k.startsWith(filtroMes));
+
+  const countSite    = dias.filter(([,v])=>v==='site').length;
+  const countHome    = dias.filter(([,v])=>v==='home').length;
+  const countFer     = dias.filter(([,v])=>v&&v.includes('férias')).length;
+  const countFeriado = dias.filter(([,v])=>v==='feriado').length;
+  const countFds     = dias.filter(([,v])=>v==='fds').length;
+  const total        = dias.length;
+
+  const ativo = escalaFiltroAtivo[nome] || null;
+
+  // Filtra chips conforme filtro ativo
+  let diasFiltrados = dias;
+  if(ativo === 'site')    diasFiltrados = dias.filter(([,v])=>v==='site');
+  if(ativo === 'home')    diasFiltrados = dias.filter(([,v])=>v==='home');
+  if(ativo === 'ferias')  diasFiltrados = dias.filter(([,v])=>v&&v.includes('férias'));
+  if(ativo === 'feriado') diasFiltrados = dias.filter(([,v])=>v==='feriado');
+  if(ativo === 'fds')     diasFiltrados = dias.filter(([,v])=>v==='fds');
+
+  const CHIP_COLORS = {
+    site:    'background:#d9ead3;color:#2d6a4f',
+    home:    'background:#cfe2f3;color:#1e40af',
+    ferias:  'background:#fce5cd;color:#92400e',
+    feriado: 'background:#fff2cc;color:#92400e',
+    fds:     'background:#f3f4f6;color:#9ca3af',
+  };
+
+  function statBtn(tipo, bg, cor, label, count){
+    if(!count) return '';
+    const isAtivo = ativo === tipo;
+    return `<span class="escala-stat escala-stat-btn ${isAtivo?'ativo':''}"
+      style="background:${isAtivo?bg.replace('0.15','1'):bg};color:${cor};cursor:pointer;border:1.5px solid ${isAtivo?cor:'transparent'};transition:all .15s"
+      onclick="setEscalaFiltro('${nome}','${tipo}')"
+      title="${isAtivo?'Clique para ver todos':'Filtrar por '+label}">
+      ${label}: ${count}
+    </span>`;
+  }
+
+  const todosAtivo = !ativo;
+  const todosBtn = `<span class="escala-stat escala-stat-btn ${todosAtivo?'ativo':''}"
+    style="background:${todosAtivo?'#1a1f36':'#f0f2f8'};color:${todosAtivo?'#fff':'#4a5272'};cursor:pointer;border:1.5px solid ${todosAtivo?'#1a1f36':'transparent'};transition:all .15s"
+    onclick="setEscalaFiltro('${nome}', null)"
+    title="Ver todos os dias">
+    Todos: ${total}
+  </span>`;
+
+  const card = document.getElementById('escala-card-'+nome);
+  if(!card) return;
+
+  card.querySelector('.escala-lista-stats').innerHTML =
+    todosBtn +
+    statBtn('site',    '#d9ead3','#2d6a4f','Site',    countSite) +
+    statBtn('home',    '#cfe2f3','#1e40af','HO',      countHome) +
+    statBtn('ferias',  '#fce5cd','#92400e','Férias',  countFer) +
+    statBtn('feriado', '#fff2cc','#92400e','Feriado', countFeriado);
+
+  card.querySelector('.escala-lista-body').innerHTML =
+    diasFiltrados.map(([k,v])=>{
+      const cls = escalaValClass(v);
+      const c = CHIP_COLORS[cls] || CHIP_COLORS.fds;
+      const [,mes,dia] = k.split('-');
+      return `<div class="escala-dia-chip" style="${c}" title="${k}">${dia}/${mes}<br><span style="font-size:9px">${escalaValLabel(v)}</span></div>`;
+    }).join('');
+}
+
+let escalaAnalistaAtivo = null;
+
+function setEscalaAnalistaBtn(nome){
+  escalaAnalistaAtivo = nome;
+  document.querySelectorAll('.escala-ana-btn').forEach(b => b.classList.remove('ativo'));
+  const btn = document.getElementById('escala-ana-'+nome);
+  if(btn) btn.classList.add('ativo');
+  renderEscalaLista();
+}
+
+function renderEscalaLista(){
+  const filtroMes = document.getElementById('escala-lista-mes')?.value || '';
+  const wrap = document.getElementById('escala-lista-wrap');
+
+  // Reset filtros ao trocar mês
+  ESCALA_ANALISTAS.forEach(n => escalaFiltroAtivo[n] = null);
+
+  const analistasVisiveis = escalaAnalistaAtivo ? [escalaAnalistaAtivo] : ESCALA_ANALISTAS;
+
+  let html = '';
+  analistasVisiveis.forEach((nome, idx) => {
+    idx = ESCALA_ANALISTAS.indexOf(nome);
+    const col = ['#2563eb','#7c3aed','#059669','#d97706','#db2777'][idx];
+    html += `<div class="escala-lista-card" id="escala-card-${nome}">
+      <div class="escala-lista-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="aniv-avatar" style="width:34px;height:34px;font-size:11px;background:${col}18;color:${col}">${initials(nome+' x')}</div>
+          <span class="escala-lista-nome">${nome}</span>
+        </div>
+        <div class="escala-lista-stats" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"></div>
+      </div>
+      <div class="escala-lista-body" style="display:flex;flex-wrap:wrap;gap:4px;padding:.8rem 1.2rem"></div>
+    </div>`;
+  });
+  wrap.innerHTML = html;
+
+  // Renderiza cada card com dados e filtros
+  ESCALA_ANALISTAS.forEach(nome => renderEscalaListaCard(nome));
+}
+
+function initEscalaLista(){
+  const sel = document.getElementById('escala-lista-mes');
+  if(!sel) return;
+  // Pegar meses disponíveis
+  const meses = new Set();
+  Object.values(ESCALA_DATA).forEach(dados => Object.keys(dados).forEach(k => meses.add(k.slice(0,7))));
+  [...meses].sort().forEach(m => {
+    const [ano, mes] = m.split('-');
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = ESCALA_MESES[parseInt(mes)-1] + ' ' + ano;
+    sel.appendChild(opt);
+  });
+}
+
+// ── RDM ───────────────────────────────────────────────────────────────────────
+let rdmDias = 1;
+
+function stepDias(d){
+  rdmDias = Math.max(1, Math.min(8, rdmDias + d));
+  document.getElementById('rdm-dias-val').textContent = rdmDias;
+  calcRDM();
+}
+
+function setDia(val, el){
+  document.querySelectorAll('.rdm-radio-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  calcRDM();
+}
+
+function calcRDM(){
+  const hT = parseInt(document.getElementById('rdm-hora')?.value||'23');
+  const mT = parseInt(document.getElementById('rdm-min')?.value||'0');
+  const isDomingo = document.querySelector('input[name="rdm-dia"]:checked')?.value === 'domingo';
+  const terminoStr = String(hT).padStart(2,'0') + ':' + String(mT).padStart(2,'0');
+
+  // Data base: hoje
+  const termino = new Date();
+  termino.setHours(hT, mT, 0, 0);
+
+  // Descanso
+  const horasDescanso = isDomingo ? 35 : 11;
+  const retorno = new Date(termino.getTime() + horasDescanso * 3600000);
+
+  // Para domingo: retorno sempre cai na terça (pula segunda)
+  let diaRetornoNome = '';
+  let retornoFinal = new Date(retorno);
+
+  if(isDomingo){
+    // Garante que o retorno seja na terça
+    while(retornoFinal.getDay() !== 2){ // 2 = terça
+      retornoFinal.setDate(retornoFinal.getDate() + 1);
+      retornoFinal.setHours(retorno.getHours(), retorno.getMinutes(), 0, 0);
+    }
+    // Se 35h já caem na terça mantém, se cair na segunda avança pra terça
+    const ret35 = new Date(termino.getTime() + 35 * 3600000);
+    if(ret35.getDay() === 1){ // segunda
+      retornoFinal = new Date(ret35);
+      retornoFinal.setDate(retornoFinal.getDate() + 1);
+      retornoFinal.setHours(ret35.getHours(), ret35.getMinutes(), 0, 0);
+    } else {
+      retornoFinal = ret35;
+    }
+    diaRetornoNome = 'Terça-feira';
+  } else {
+    retornoFinal = new Date(termino.getTime() + 11 * 3600000);
+    const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+    diaRetornoNome = dias[retornoFinal.getDay()];
+  }
+
+  const hRet = retornoFinal.getHours();
+  const mRet = retornoFinal.getMinutes();
+  const retornoStr = String(hRet).padStart(2,'0') + 'h' + (mRet ? String(mRet).padStart(2,'0') : '00');
+  const retornoHora = hRet + mRet/60;
+
+  // Regra: até 12h = HO, após 12h = folga
+  const isHO = retornoHora <= 12;
+  const isNoite = hT >= 21 || hT < 6; // terminou depois das 21h
+
+  // 7 dias consecutivos
+  const is8Dia = rdmDias >= 7;
+
+  let html = '';
+
+  // Alerta 8º dia
+  if(is8Dia){
+    html += '<div class="rdm-alert">⚠️ <strong>Atenção:</strong> ' + (rdmDias === 7 ? 'Hoje é o 7º dia consecutivo — o analista <strong>não pode ser acionado amanhã</strong> (8º dia = folga obrigatória).' : '8º dia ou mais consecutivo — <strong>folga obrigatória!</strong> O analista não pode ser acionado.') + '</div>';
+  }
+
+  html += '<div class="rdm-result-grid">';
+
+  // Box: término
+  html += '<div class="rdm-result-box azul"><div class="rdm-result-label">Término da implantação</div><div class="rdm-result-value">' + terminoStr.replace(':','h') + '</div><div class="rdm-result-desc">' + (isDomingo ? 'Domingo' : 'Dia de semana') + ' · Descanso: ' + horasDescanso + 'h</div></div>';
+
+  // Box: retorno
+  const retornoCor = isHO ? 'verde' : 'amarelo';
+  html += '<div class="rdm-result-box ' + retornoCor + '"><div class="rdm-result-label">Horário de retorno</div><div class="rdm-result-value">' + retornoStr + '</div><div class="rdm-result-desc">' + diaRetornoNome + (isDomingo ? ' (35h após término)' : ' (+11h de descanso)') + '</div></div>';
+
+  // Box: regra aplicada
+  if(isHO){
+    html += '<div class="rdm-result-box verde"><div class="rdm-result-label">Regra aplicada</div><div class="rdm-result-value">🏠 Home Office</div><div class="rdm-result-desc">Entrada às ' + retornoStr + ' · Saída entre 17h e 18h<br>Diferença de jornada abonada pelo gestor</div></div>';
+  } else {
+    html += '<div class="rdm-result-box amarelo"><div class="rdm-result-label">Regra aplicada</div><div class="rdm-result-value">🌴 Folga Abonada</div><div class="rdm-result-desc">Retorno após 12h → dia 100% abonado<br>Colaborador não trabalha</div></div>';
+  }
+
+  html += '</div>';
+
+  // Resumo textual
+  const resumoCor = isHO ? '#065f46' : '#92400e';
+  const resumoBg  = isHO ? '#ecfdf5' : '#fffbeb';
+  html += '<div style="margin-top:12px;background:' + resumoBg + ';border-radius:10px;padding:1rem 1.2rem;font-size:13px;color:' + resumoCor + ';line-height:1.7">';
+  html += '<strong>📋 Resumo:</strong><br>';
+  html += '• Implantação terminou às <strong>' + terminoStr.replace(':','h') + '</strong><br>';
+  html += '• Descanso de <strong>' + horasDescanso + 'h</strong> → retorno às <strong>' + retornoStr + '</strong> (' + diaRetornoNome + ')<br>';
+  if(isHO){
+    html += '• Resultado: <strong>Home Office</strong> — entra às ' + retornoStr + ', sai entre 17h e 18h, diferença abonada';
+  } else {
+    html += '• Resultado: <strong>Folga abonada integral</strong> — não trabalha, dia 100% abonado';
+  }
+  if(is8Dia) html += '<br>• ⚠️ <strong>Atenção ao limite de dias consecutivos!</strong>';
+  html += '</div>';
+
+  document.getElementById('rdm-result').innerHTML = html;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+const now=new Date();
+calYear=now.getFullYear();
+calMonth=now.getMonth();
+employees=INLINE_DATA;
+const ts='@@LAST_UPDATE@@';
+document.getElementById('last-update').textContent=ts.startsWith('@@')?'Dados embutidos':'Atualizado: '+ts;
+document.querySelectorAll('.sidebar-subnav').forEach(s=>s.style.display='none');
+document.getElementById('ferias-subnav').style.display='block';
+document.getElementById('tab-timeline').classList.add('active');
+// Escala init
+const now2 = new Date();
+escalaMes = now2.getMonth();
+escalaAno = now2.getFullYear();
+escalaAnalistaAtivo = 'Bruno';
+initEscalaLista();
+// RDM defaults
+const rdmHora = document.getElementById('rdm-hora');
+if(rdmHora){ rdmHora.value='23'; }
+// Mark first radio as active
+const firstRadio = document.querySelector('.rdm-radio-btn');
+if(firstRadio) firstRadio.classList.add('active');
+renderSummary();
+renderTimeline();
+renderTable();
+populateCalFilter();
+renderCalendar();
+</script>
+</body>
+</html>
