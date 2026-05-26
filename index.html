@@ -207,37 +207,6 @@ tbody td{padding:11px 14px;vertical-align:middle;}
 .rdm-resumo-item{font-size:13px;color:#1e40af;display:flex;align-items:center;gap:8px;}
 .rdm-check{font-size:15px;}
 
-/* ESCALA */
-.escala-controls{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;flex-wrap:wrap;}
-.escala-month-label{font-size:15px;font-weight:600;min-width:140px;text-align:center;}
-.escala-table-wrap{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:auto;}
-.escala-table{border-collapse:collapse;font-size:12px;min-width:100%;}
-.escala-table th{padding:8px 6px;text-align:center;font-size:10px;font-weight:700;color:#4a5272;background:#f4f6fb;border:1px solid #e0e4ef;white-space:nowrap;position:sticky;top:0;z-index:2;}
-.escala-table th.nome-col{text-align:left;padding-left:12px;position:sticky;left:0;z-index:3;min-width:90px;}
-.escala-table td{padding:6px 4px;text-align:center;border:1px solid #e0e4ef;font-size:10px;font-weight:600;white-space:nowrap;}
-.escala-table td.nome-col{text-align:left;padding-left:12px;font-size:12px;font-weight:600;color:#1a1f36;background:#fff;position:sticky;left:0;z-index:1;}
-.escala-table td.fds,.escala-table th.fds{background:#f3f4f6;color:#9ca3af;}
-.escala-table td.site{background:#d9ead3;color:#2d6a4f;}
-.escala-table td.home{background:#cfe2f3;color:#1e40af;}
-.escala-table td.ferias{background:#fce5cd;color:#92400e;}
-.escala-table td.feriado{background:#fff2cc;color:#92400e;}
-.escala-legenda{display:flex;gap:12px;flex-wrap:wrap;margin-top:1rem;}
-.escala-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5272;}
-.escala-leg-dot{width:12px;height:12px;border-radius:3px;}
-.escala-lista-wrap{display:flex;flex-direction:column;gap:14px;}
-.escala-lista-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
-.escala-lista-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:#f8faff;border-bottom:1px solid #e0e4ef;}
-.escala-lista-nome{font-size:13px;font-weight:700;color:#1a1f36;}
-.escala-lista-stats{display:flex;gap:8px;}
-.escala-stat{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
-.escala-stat-btn:hover{opacity:.85;transform:scale(1.04);}
-.escala-ana-btn{background:#f0f2f8;border:1.5px solid #e0e4ef;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#4a5272;cursor:pointer;font-family:inherit;transition:all .15s;}
-.escala-ana-btn:hover{background:#dbeafe;border-color:#2563eb;color:#2563eb;}
-.escala-ana-btn.ativo{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25);}
-.escala-stat-btn.ativo{box-shadow:0 2px 8px rgba(0,0,0,.12);}
-.escala-lista-body{padding:.8rem 1.2rem;display:flex;flex-wrap:wrap;gap:4px;}
-.escala-dia-chip{padding:3px 7px;border-radius:6px;font-size:10px;font-weight:600;cursor:default;}
-
 /* TOOLTIP */
 .tooltip{position:fixed;background:#fff;border:1px solid #e0e4ef;border-radius:10px;padding:9px 13px;font-size:12px;color:#1a1f36;pointer-events:none;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.1);max-width:220px;display:none;}
 .tooltip strong{color:#2563eb;display:block;margin-bottom:3px;}
@@ -301,9 +270,7 @@ tbody td{padding:11px 14px;vertical-align:middle;}
     <div class="sidebar-item" id="nav-rdm" onclick="onRdmClick()">
       <span class="icon">🌙</span><span>Atuação em RDM</span>
     </div>
-    <div class="sidebar-item" id="nav-escala" onclick="onEscalaClick()">
-      <span class="icon">📆</span><span>Escala</span>
-    </div>
+
     <div class="sidebar-item active" id="nav-ferias" onclick="switchSection('ferias')">
       <span class="icon">🏖️</span><span>Férias</span>
     </div>
@@ -330,13 +297,7 @@ tbody td{padding:11px 14px;vertical-align:middle;}
       <div class="sidebar-item" id="tab-aniv-timeline" onclick="switchTab('aniv-timeline')"><span class="icon">📅</span><span>Linha do Ano</span></div>
     </div>
 
-    <div class="sidebar-subnav" id="escala-subnav">
-      <div class="sidebar-label">Escala — Visões</div>
-      <div class="sidebar-item" id="tab-escala-mensal" onclick="switchTab('escala-mensal')"><span class="icon">🗓️</span><span>Mensal</span></div>
-      <div class="sidebar-item" id="tab-escala-lista" onclick="switchTab('escala-lista')"><span class="icon">📋</span><span>Por Analista</span></div>
-    </div>
-
-    <div class="sidebar-subnav" id="rdm-subnav">
+<div class="sidebar-subnav" id="rdm-subnav">
       <div class="sidebar-label">RDM — Visões</div>
       <div class="sidebar-item" id="tab-rdm-calc" onclick="switchTab('rdm-calc')"><span class="icon">🧮</span><span>Calculadora</span></div>
       <div class="sidebar-item" id="tab-rdm-regras" onclick="onRegrasClick()"><span class="icon">📘</span><span>Regras</span></div>
@@ -428,54 +389,7 @@ tbody td{padding:11px 14px;vertical-align:middle;}
       <div class="pdi-cards-list" id="pdi-cards-list"></div>
     </div>
 
-    <!-- ESCALA MENSAL -->
-    <div class="panel" id="panel-escala-mensal">
-      <div class="escala-controls">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <button class="btn-nav" onclick="escalaMesNav(-1)">&#8249;</button>
-          <div class="escala-month-label" id="escala-month-label"></div>
-          <button class="btn-nav" onclick="escalaMesNav(1)">&#8250;</button>
-        </div>
-        <select class="filter-select" id="escala-analista-filter" onchange="renderEscalaMensal()">
-          <option value="">Todos os analistas</option>
-          <option value="Bruno">Bruno</option>
-          <option value="Camila">Camila</option>
-          <option value="Carol">Carol</option>
-          <option value="Matheus">Matheus</option>
-          <option value="Samuel">Samuel</option>
-        </select>
-      </div>
-      <div class="escala-table-wrap" id="escala-table-wrap"></div>
-      <div class="escala-legenda">
-        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#d9ead3"></div>Site</div>
-        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#cfe2f3"></div>Home Office</div>
-        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#fce5cd"></div>Férias</div>
-        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#fff2cc"></div>Feriado</div>
-        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#f3f4f6"></div>Final de semana</div>
-      </div>
-    </div>
-
-    <!-- ESCALA POR ANALISTA -->
-    <div class="panel" id="panel-escala-lista">
-      <div class="escala-controls" style="gap:16px;align-items:flex-start;flex-direction:column">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <select class="filter-select" id="escala-lista-mes" onchange="renderEscalaLista()">
-            <option value="">Todos os meses</option>
-          </select>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap" id="escala-analista-btns">
-          <span style="font-size:11px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.07em;margin-right:4px">Analista:</span>
-          <button class="escala-ana-btn ativo" id="escala-ana-Bruno" onclick="setEscalaAnalistaBtn('Bruno')">Bruno</button>
-          <button class="escala-ana-btn" id="escala-ana-Camila" onclick="setEscalaAnalistaBtn('Camila')">Camila</button>
-          <button class="escala-ana-btn" id="escala-ana-Carol" onclick="setEscalaAnalistaBtn('Carol')">Carol</button>
-          <button class="escala-ana-btn" id="escala-ana-Matheus" onclick="setEscalaAnalistaBtn('Matheus')">Matheus</button>
-          <button class="escala-ana-btn" id="escala-ana-Samuel" onclick="setEscalaAnalistaBtn('Samuel')">Samuel</button>
-        </div>
-      </div>
-      <div class="escala-lista-wrap" id="escala-lista-wrap"></div>
-    </div>
-
-    <!-- RDM CALCULADORA -->
+<!-- RDM CALCULADORA -->
     <div class="panel" id="panel-rdm-calc">
       <div class="rdm-calc-wrap">
         <div class="rdm-header">
@@ -487,14 +401,56 @@ tbody td{padding:11px 14px;vertical-align:middle;}
 
           <div class="rdm-card">
             <div class="rdm-card-title">📅 Dia da implantação</div>
-            <div class="rdm-radio-group">
-              <label class="rdm-radio-btn" onclick="setDia('semana',this)">
-                <input type="radio" name="rdm-dia" value="semana" checked> Dia de semana / Sábado
-              </label>
-              <label class="rdm-radio-btn" onclick="setDia('domingo',this)">
-                <input type="radio" name="rdm-dia" value="domingo"> Domingo
-              </label>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <select id="rdm-mes" class="rdm-select" onchange="updateDias();calcRDM()">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+              <select id="rdm-dia-num" class="rdm-select" style="min-width:60px" onchange="calcRDM()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+              </select>
             </div>
+            <div id="rdm-dia-semana" style="font-size:13px;font-weight:600;color:#2563eb;margin-top:6px"></div>
           </div>
 
           <div class="rdm-card">
@@ -724,8 +680,6 @@ function switchTab(name){
   if(name==='aniv-tabela') renderAnivTable();
   if(name==='aniv-timeline') renderAnivTimeline();
   if(name==='rdm-calc') setTimeout(calcRDM,100);
-  if(name==='escala-mensal') renderEscalaMensal();
-  if(name==='escala-lista') renderEscalaLista();
   if(name==='pdi-meu') renderPdiMeu();
   if(name==='pdi-resumo') renderPdiResumo();
   window.scrollTo(0,0);
@@ -1023,223 +977,6 @@ function renderPdiResumo(){
   document.getElementById('pdi-resumo-body').innerHTML=rows.join('');
 }
 
-// ── ESCALA DATA ──────────────────────────────────────────────────────────────
-const ESCALA_DATA = {
-  'Bruno': {"2026-04-27": "férias", "2026-04-28": "férias", "2026-04-29": "férias", "2026-04-30": "férias", "2026-05-01": "férias", "2026-05-02": "férias", "2026-05-03": "férias", "2026-05-04": "férias", "2026-05-05": "férias", "2026-05-06": "férias", "2026-05-07": "férias", "2026-05-08": "férias", "2026-05-09": "férias", "2026-05-10": "férias", "2026-05-11": "férias", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "home", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "home", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "site", "2026-05-28": "home", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "home", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "home", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "home", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "home", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "home", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "site", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "home", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "site", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "home", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "site", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "home", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "site", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "home", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "home", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "home", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "home", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "home", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "home", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "home", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "home", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "home", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "home", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "home", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "home", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "home", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "home", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "home", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "home", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "home", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "home", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "home", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "home", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "site"},
-  'Camila': {"2026-04-27": "home", "2026-04-28": "site", "2026-04-29": "site", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "home", "2026-05-06": "site", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "site", "2026-05-13": "home", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "home", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "site", "2026-05-28": "site", "2026-05-29": "home", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "home", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "home", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "home", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "home", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "home", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "home", "2026-07-07": "site", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "home", "2026-07-14": "site", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "home", "2026-07-21": "site", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "home", "2026-07-28": "site", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "home", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "home", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "home", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "home", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "home", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "home", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "home", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "home", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "home", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "home", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "home", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "home", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "home", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "home", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "home", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "home", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "home", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "home", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "home", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "site"},
-  'Carol': {"2026-04-27": "site", "2026-04-28": "home", "2026-04-29": "site", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "site", "2026-05-06": "home", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "home", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "home", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "home", "2026-05-27": "site", "2026-05-28": "site", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "home", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "home", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "home", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "home", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "home", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "home", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "home", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "home", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "home", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "home", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "home", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "home", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "home", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "home", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "home", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "home", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "home", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "home", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "home", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "home", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "home", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "home", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "home", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "home", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "home", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "home", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "home", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "home", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "home", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "home", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "home", "2026-12-30": "site", "2026-12-31": "site"},
-  'Matheus': {"2026-04-27": "site", "2026-04-28": "site", "2026-04-29": "home", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "site", "2026-05-06": "site", "2026-05-07": "home", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "home", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "home", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "férias", "2026-05-26": "férias", "2026-05-27": "férias", "2026-05-28": "férias", "2026-05-29": "férias", "2026-05-30": "férias", "2026-05-31": "férias", "2026-06-01": "férias", "2026-06-02": "férias", "2026-06-03": "férias", "2026-06-04": "feriado", "2026-06-05": "férias", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "férias", "2026-06-09": "férias", "2026-06-10": "férias", "2026-06-11": "férias", "2026-06-12": "férias", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "férias", "2026-06-16": "férias", "2026-06-17": "férias", "2026-06-18": "férias", "2026-06-19": "férias", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "férias", "2026-06-23": "férias", "2026-06-24": "férias", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "home", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "site", "2026-07-08": "home", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "site", "2026-07-15": "home", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "site", "2026-07-22": "home", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "site", "2026-07-29": "home", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "site", "2026-08-05": "home", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "home", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "home", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "home", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "home", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "home", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "home", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "home", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "home", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "home", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "home", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "home", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "home", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "home", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "home", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "home", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "home", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "home", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "home", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "home", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "home", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "home", "2026-12-31": "site"},
-  'Samuel': {"2026-04-27": "site", "2026-04-28": "site", "2026-04-29": "site", "2026-04-30": "home", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "home", "2026-05-05": "site", "2026-05-06": "site", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "home", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "home", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "home", "2026-05-28": "site", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "home", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "home", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "home", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "home", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "férias", "2026-07-07": "férias", "2026-07-08": "férias", "2026-07-09": "férias", "2026-07-10": "férias", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "férias", "2026-07-14": "férias", "2026-07-15": "férias", "2026-07-16": "férias", "2026-07-17": "férias", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "férias", "2026-07-21": "férias", "2026-07-22": "férias", "2026-07-23": "férias", "2026-07-24": "férias", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "férias", "2026-07-28": "férias", "2026-07-29": "férias", "2026-07-30": "férias", "2026-07-31": "férias", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "férias", "2026-08-04": "férias", "2026-08-05": "site", "2026-08-06": "home", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "home", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "home", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "home", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "home", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "home", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "home", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "home", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "home", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "home", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "home", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "home", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "home", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "home", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "home", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "home", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "home", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "home", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "home", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "home", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "home", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "home"}
-};
-
-let escalaMes = 4, escalaAno = 2026; // começa em maio (índice 4)
-
-const ESCALA_MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const ESCALA_ANALISTAS = ['Bruno','Camila','Carol','Matheus','Samuel'];
-
-function escalaMesNav(d){
-  escalaMes += d;
-  if(escalaMes > 11){ escalaMes=0; escalaAno++; }
-  if(escalaMes < 0){ escalaMes=11; escalaAno--; }
-  renderEscalaMensal();
-}
-
-function escalaValClass(v){
-  if(!v) return 'fds';
-  const vl = v.toLowerCase();
-  if(vl==='site') return 'site';
-  if(vl==='home') return 'home';
-  if(vl.includes('férias')||vl.includes('ferias')) return 'ferias';
-  if(vl==='feriado') return 'feriado';
-  return 'fds';
-}
-
-function escalaValLabel(v){
-  if(!v) return '';
-  const vl = v.toLowerCase();
-  if(vl==='site') return 'Site';
-  if(vl==='home') return 'HO';
-  if(vl.includes('férias')||vl.includes('ferias')) return 'Fér';
-  if(vl==='feriado') return 'Fer!';
-  return vl;
-}
-
-function renderEscalaMensal(){
-  const label = ESCALA_MESES[escalaMes] + ' ' + escalaAno;
-  document.getElementById('escala-month-label').textContent = label;
-  const filtro = document.getElementById('escala-analista-filter')?.value || '';
-  const analistas = filtro ? [filtro] : ESCALA_ANALISTAS;
-
-  // Dias do mês
-  const diasMes = [];
-  const d = new Date(escalaAno, escalaMes, 1);
-  while(d.getMonth() === escalaMes){
-    diasMes.push(new Date(d));
-    d.setDate(d.getDate()+1);
-  }
-
-  const diasSemana = ['D','S','T','Q','Q','S','S'];
-
-  let html = '<table class="escala-table"><thead><tr>';
-  html += '<th class="nome-col">Analista</th>';
-  diasMes.forEach(dia => {
-    const dow = dia.getDay();
-    const isFds = dow === 0 || dow === 6;
-    html += `<th class="${isFds?'fds':''}">${dia.getDate()}<br><span style="font-size:9px;opacity:.7">${diasSemana[dow]}</span></th>`;
-  });
-  html += '</tr></thead><tbody>';
-
-  analistas.forEach(nome => {
-    html += `<tr><td class="nome-col">${nome}</td>`;
-    diasMes.forEach(dia => {
-      const key = `${dia.getFullYear()}-${String(dia.getMonth()+1).padStart(2,'0')}-${String(dia.getDate()).padStart(2,'0')}`;
-      const val = ESCALA_DATA[nome]?.[key] || '';
-      const cls = escalaValClass(val);
-      const dow = dia.getDay();
-      const isFds = dow === 0 || dow === 6;
-      html += `<td class="${isFds&&!val?'fds':cls}">${escalaValLabel(val)}</td>`;
-    });
-    html += '</tr>';
-  });
-
-  html += '</tbody></table>';
-  document.getElementById('escala-table-wrap').innerHTML = html;
-}
-
-// Filtro ativo por analista: null = todos
-const escalaFiltroAtivo = {};
-
-function setEscalaFiltro(nome, tipo){
-  escalaFiltroAtivo[nome] = escalaFiltroAtivo[nome] === tipo ? null : tipo;
-  renderEscalaListaCard(nome);
-}
-
-function renderEscalaListaCard(nome){
-  const filtroMes = document.getElementById('escala-lista-mes')?.value || '';
-  const idx = ESCALA_ANALISTAS.indexOf(nome);
-  const col = ['#2563eb','#7c3aed','#059669','#d97706','#db2777'][idx];
-  const dados = ESCALA_DATA[nome] || {};
-  let dias = Object.entries(dados);
-  if(filtroMes) dias = dias.filter(([k]) => k.startsWith(filtroMes));
-
-  const countSite    = dias.filter(([,v])=>v==='site').length;
-  const countHome    = dias.filter(([,v])=>v==='home').length;
-  const countFer     = dias.filter(([,v])=>v&&v.includes('férias')).length;
-  const countFeriado = dias.filter(([,v])=>v==='feriado').length;
-  const countFds     = dias.filter(([,v])=>v==='fds').length;
-  const total        = dias.length;
-
-  const ativo = escalaFiltroAtivo[nome] || null;
-
-  // Filtra chips conforme filtro ativo
-  let diasFiltrados = dias;
-  if(ativo === 'site')    diasFiltrados = dias.filter(([,v])=>v==='site');
-  if(ativo === 'home')    diasFiltrados = dias.filter(([,v])=>v==='home');
-  if(ativo === 'ferias')  diasFiltrados = dias.filter(([,v])=>v&&v.includes('férias'));
-  if(ativo === 'feriado') diasFiltrados = dias.filter(([,v])=>v==='feriado');
-  if(ativo === 'fds')     diasFiltrados = dias.filter(([,v])=>v==='fds');
-
-  const CHIP_COLORS = {
-    site:    'background:#d9ead3;color:#2d6a4f',
-    home:    'background:#cfe2f3;color:#1e40af',
-    ferias:  'background:#fce5cd;color:#92400e',
-    feriado: 'background:#fff2cc;color:#92400e',
-    fds:     'background:#f3f4f6;color:#9ca3af',
-  };
-
-  function statBtn(tipo, bg, cor, label, count){
-    if(!count) return '';
-    const isAtivo = ativo === tipo;
-    return `<span class="escala-stat escala-stat-btn ${isAtivo?'ativo':''}"
-      style="background:${isAtivo?bg.replace('0.15','1'):bg};color:${cor};cursor:pointer;border:1.5px solid ${isAtivo?cor:'transparent'};transition:all .15s"
-      onclick="setEscalaFiltro('${nome}','${tipo}')"
-      title="${isAtivo?'Clique para ver todos':'Filtrar por '+label}">
-      ${label}: ${count}
-    </span>`;
-  }
-
-  const todosAtivo = !ativo;
-  const todosBtn = `<span class="escala-stat escala-stat-btn ${todosAtivo?'ativo':''}"
-    style="background:${todosAtivo?'#1a1f36':'#f0f2f8'};color:${todosAtivo?'#fff':'#4a5272'};cursor:pointer;border:1.5px solid ${todosAtivo?'#1a1f36':'transparent'};transition:all .15s"
-    onclick="setEscalaFiltro('${nome}', null)"
-    title="Ver todos os dias">
-    Todos: ${total}
-  </span>`;
-
-  const card = document.getElementById('escala-card-'+nome);
-  if(!card) return;
-
-  card.querySelector('.escala-lista-stats').innerHTML =
-    todosBtn +
-    statBtn('site',    '#d9ead3','#2d6a4f','Site',    countSite) +
-    statBtn('home',    '#cfe2f3','#1e40af','HO',      countHome) +
-    statBtn('ferias',  '#fce5cd','#92400e','Férias',  countFer) +
-    statBtn('feriado', '#fff2cc','#92400e','Feriado', countFeriado);
-
-  card.querySelector('.escala-lista-body').innerHTML =
-    diasFiltrados.map(([k,v])=>{
-      const cls = escalaValClass(v);
-      const c = CHIP_COLORS[cls] || CHIP_COLORS.fds;
-      const [,mes,dia] = k.split('-');
-      return `<div class="escala-dia-chip" style="${c}" title="${k}">${dia}/${mes}<br><span style="font-size:9px">${escalaValLabel(v)}</span></div>`;
-    }).join('');
-}
-
-let escalaAnalistaAtivo = null;
-
-function setEscalaAnalistaBtn(nome){
-  escalaAnalistaAtivo = nome;
-  document.querySelectorAll('.escala-ana-btn').forEach(b => b.classList.remove('ativo'));
-  const btn = document.getElementById('escala-ana-'+nome);
-  if(btn) btn.classList.add('ativo');
-  renderEscalaLista();
-}
-
-function renderEscalaLista(){
-  const filtroMes = document.getElementById('escala-lista-mes')?.value || '';
-  const wrap = document.getElementById('escala-lista-wrap');
-
-  // Reset filtros ao trocar mês
-  ESCALA_ANALISTAS.forEach(n => escalaFiltroAtivo[n] = null);
-
-  const analistasVisiveis = escalaAnalistaAtivo ? [escalaAnalistaAtivo] : ESCALA_ANALISTAS;
-
-  let html = '';
-  analistasVisiveis.forEach((nome, idx) => {
-    idx = ESCALA_ANALISTAS.indexOf(nome);
-    const col = ['#2563eb','#7c3aed','#059669','#d97706','#db2777'][idx];
-    html += `<div class="escala-lista-card" id="escala-card-${nome}">
-      <div class="escala-lista-header">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="aniv-avatar" style="width:34px;height:34px;font-size:11px;background:${col}18;color:${col}">${initials(nome+' x')}</div>
-          <span class="escala-lista-nome">${nome}</span>
-        </div>
-        <div class="escala-lista-stats" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"></div>
-      </div>
-      <div class="escala-lista-body" style="display:flex;flex-wrap:wrap;gap:4px;padding:.8rem 1.2rem"></div>
-    </div>`;
-  });
-  wrap.innerHTML = html;
-
-  // Renderiza cada card com dados e filtros
-  ESCALA_ANALISTAS.forEach(nome => renderEscalaListaCard(nome));
-}
-
-function initEscalaLista(){
-  const sel = document.getElementById('escala-lista-mes');
-  if(!sel) return;
-  // Pegar meses disponíveis
-  const meses = new Set();
-  Object.values(ESCALA_DATA).forEach(dados => Object.keys(dados).forEach(k => meses.add(k.slice(0,7))));
-  [...meses].sort().forEach(m => {
-    const [ano, mes] = m.split('-');
-    const opt = document.createElement('option');
-    opt.value = m;
-    opt.textContent = ESCALA_MESES[parseInt(mes)-1] + ' ' + ano;
-    sel.appendChild(opt);
-  });
-}
-
 // ── RDM ───────────────────────────────────────────────────────────────────────
 let rdmDias = 1;
 
@@ -1249,39 +986,46 @@ function stepDias(d){
   calcRDM();
 }
 
-function setDia(val, el){
-  document.querySelectorAll('.rdm-radio-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  calcRDM();
+function updateDias(){
+  const mes = parseInt(document.getElementById('rdm-mes')?.value||'1');
+  const ano = new Date().getFullYear();
+  const maxDia = new Date(ano, mes, 0).getDate();
+  const selDia = document.getElementById('rdm-dia-num');
+  const cur = parseInt(selDia?.value||'1');
+  if(selDia){
+    selDia.innerHTML = Array.from({length:maxDia},(_,i)=>
+      `<option value="${i+1}"${cur===i+1?' selected':''}>${i+1}</option>`
+    ).join('');
+  }
 }
 
 function calcRDM(){
   const hT = parseInt(document.getElementById('rdm-hora')?.value||'23');
   const mT = parseInt(document.getElementById('rdm-min')?.value||'0');
-  const isDomingo = document.querySelector('input[name="rdm-dia"]:checked')?.value === 'domingo';
+  const mes = parseInt(document.getElementById('rdm-mes')?.value||new Date().getMonth()+1);
+  const diaNum = parseInt(document.getElementById('rdm-dia-num')?.value||new Date().getDate());
+  const ano = new Date().getFullYear();
+  const dataImpl = new Date(ano, mes-1, diaNum);
+  const isDomingo = dataImpl.getDay() === 0;
+  const diasSemana = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const nomeDia = diasSemana[dataImpl.getDay()];
+  const diaEl = document.getElementById('rdm-dia-semana');
+  if(diaEl) diaEl.textContent = '📆 ' + nomeDia + ', ' + diaNum + '/' + String(mes).padStart(2,'0') + '/' + ano;
   const terminoStr = String(hT).padStart(2,'0') + ':' + String(mT).padStart(2,'0');
 
-  // Data base: hoje
-  const termino = new Date();
-  termino.setHours(hT, mT, 0, 0);
+  // Data da implantação selecionada
+  const termino = new Date(ano, mes-1, diaNum, hT, mT, 0, 0);
 
   // Descanso
   const horasDescanso = isDomingo ? 35 : 11;
-  const retorno = new Date(termino.getTime() + horasDescanso * 3600000);
 
   // Para domingo: retorno sempre cai na terça (pula segunda)
   let diaRetornoNome = '';
-  let retornoFinal = new Date(retorno);
+  let retornoFinal;
 
   if(isDomingo){
-    // Garante que o retorno seja na terça
-    while(retornoFinal.getDay() !== 2){ // 2 = terça
-      retornoFinal.setDate(retornoFinal.getDate() + 1);
-      retornoFinal.setHours(retorno.getHours(), retorno.getMinutes(), 0, 0);
-    }
-    // Se 35h já caem na terça mantém, se cair na segunda avança pra terça
     const ret35 = new Date(termino.getTime() + 35 * 3600000);
-    if(ret35.getDay() === 1){ // segunda
+    if(ret35.getDay() === 1){ // caiu na segunda — avança pra terça
       retornoFinal = new Date(ret35);
       retornoFinal.setDate(retornoFinal.getDate() + 1);
       retornoFinal.setHours(ret35.getHours(), ret35.getMinutes(), 0, 0);
@@ -1317,7 +1061,7 @@ function calcRDM(){
   html += '<div class="rdm-result-grid">';
 
   // Box: término
-  html += '<div class="rdm-result-box azul"><div class="rdm-result-label">Término da implantação</div><div class="rdm-result-value">' + terminoStr.replace(':','h') + '</div><div class="rdm-result-desc">' + (isDomingo ? 'Domingo' : 'Dia de semana') + ' · Descanso: ' + horasDescanso + 'h</div></div>';
+  html += '<div class="rdm-result-box azul"><div class="rdm-result-label">Término da implantação</div><div class="rdm-result-value">' + terminoStr.replace(':','h') + '</div><div class="rdm-result-desc">' + nomeDia + ' · Descanso: ' + horasDescanso + 'h</div></div>';
 
   // Box: retorno
   const retornoCor = isHO ? 'verde' : 'amarelo';
@@ -1325,7 +1069,7 @@ function calcRDM(){
 
   // Box: regra aplicada
   if(isHO){
-    html += '<div class="rdm-result-box verde"><div class="rdm-result-label">Regra aplicada</div><div class="rdm-result-value">🏠 Home Office</div><div class="rdm-result-desc">Entrada às ' + retornoStr + ' · Saída entre 17h e 18h<br>Diferença de jornada abonada pelo gestor</div></div>';
+    html += '<div class="rdm-result-box verde"><div class="rdm-result-label">Regra aplicada</div><div class="rdm-result-value">🏠 Opção de Trabalho Remoto</div><div class="rdm-result-desc">Entrada às ' + retornoStr + ' · Saída entre 17h e 18h<br>Devido ao período de intrajornada, se houver diferença de horário, procurar o gestor.</div></div>';
   } else {
     html += '<div class="rdm-result-box amarelo"><div class="rdm-result-label">Regra aplicada</div><div class="rdm-result-value">🌴 Folga Abonada</div><div class="rdm-result-desc">Retorno após 12h → dia 100% abonado<br>Colaborador não trabalha</div></div>';
   }
@@ -1340,7 +1084,7 @@ function calcRDM(){
   html += '• Implantação terminou às <strong>' + terminoStr.replace(':','h') + '</strong><br>';
   html += '• Descanso de <strong>' + horasDescanso + 'h</strong> → retorno às <strong>' + retornoStr + '</strong> (' + diaRetornoNome + ')<br>';
   if(isHO){
-    html += '• Resultado: <strong>Home Office</strong> — entra às ' + retornoStr + ', sai entre 17h e 18h, diferença abonada';
+    html += '• Resultado: <strong>Opção de Trabalho Remoto</strong> — entra às ' + retornoStr + ', sai entre 17h e 18h. Se houver diferença de horário, procurar o gestor.';
   } else {
     html += '• Resultado: <strong>Folga abonada integral</strong> — não trabalha, dia 100% abonado';
   }
@@ -1360,18 +1104,15 @@ document.getElementById('last-update').textContent=ts.startsWith('@@')?'Dados em
 document.querySelectorAll('.sidebar-subnav').forEach(s=>s.style.display='none');
 document.getElementById('ferias-subnav').style.display='block';
 document.getElementById('tab-timeline').classList.add('active');
-// Escala init
-const now2 = new Date();
-escalaMes = now2.getMonth();
-escalaAno = now2.getFullYear();
-escalaAnalistaAtivo = 'Bruno';
-initEscalaLista();
+
 // RDM defaults
 const rdmHora = document.getElementById('rdm-hora');
 if(rdmHora){ rdmHora.value='23'; }
-// Mark first radio as active
-const firstRadio = document.querySelector('.rdm-radio-btn');
-if(firstRadio) firstRadio.classList.add('active');
+const rdmMesEl = document.getElementById('rdm-mes');
+if(rdmMesEl){ rdmMesEl.value = String(new Date().getMonth()+1); }
+const rdmDiaEl = document.getElementById('rdm-dia-num');
+if(rdmDiaEl){ rdmDiaEl.value = String(new Date().getDate()); }
+updateDias();
 renderSummary();
 renderTimeline();
 renderTable();

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Escala — Gestão Administrativa Negócios SP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#f4f6fb;color:#1a1f36;min-height:100vh;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:rgba(15,17,25,.6);backdrop-filter:blur(6px);z-index:9000;display:flex;align-items:center;justify-content:center;}
+.login-box{background:#fff;border-radius:18px;padding:2.5rem 2rem;width:320px;box-shadow:0 20px 60px rgba(0,0,0,.15);text-align:center;position:relative;}
+.login-logo{width:52px;height:52px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 1rem;}
+.login-box h2{font-size:16px;font-weight:700;color:#1a1f36;margin-bottom:4px;}
+.login-box p{font-size:12px;color:#8b92b0;margin-bottom:1.5rem;}
+.login-field{width:100%;background:#f4f6fb;border:1px solid #e0e4ef;border-radius:10px;padding:10px 14px;font-size:13px;font-family:inherit;color:#1a1f36;outline:none;margin-bottom:10px;display:block;}
+.login-field:focus{border-color:#2563eb;}
+.login-btn{width:100%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+.login-btn:hover{opacity:.9;}
+.login-error{color:#dc2626;font-size:12px;margin-top:10px;display:none;}
+.close-btn{position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;color:#8b92b0;cursor:pointer;}
+
+/* HEADER */
+.header{background:#fff;border-bottom:1px solid #e0e4ef;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.logo{width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.header-brand h1{font-size:15px;font-weight:600;}
+.header-brand span{font-size:12px;color:#8b92b0;margin-left:4px;}
+.last-update{font-family:'DM Mono',monospace;font-size:11px;color:#8b92b0;background:#f0f2f8;border:1px solid #e0e4ef;padding:3px 10px;border-radius:20px;}
+.user-pill{display:flex;align-items:center;gap:8px;background:#f0f2f8;border:1px solid #e0e4ef;border-radius:20px;padding:4px 12px 4px 6px;cursor:pointer;}
+.user-pill:hover{background:#e5e9f5;}
+.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.user-pill span{font-size:12px;font-weight:600;color:#1a1f36;}
+.user-pill small{font-size:11px;color:#8b92b0;}
+
+/* LAYOUT */
+.app-body{display:flex;}
+.sidebar{width:210px;min-width:210px;background:#fff;border-right:1px solid #e0e4ef;padding:1rem 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+.sidebar-label{font-size:10px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.1em;padding:6px 16px 4px;}
+.sidebar-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;font-weight:500;color:#4a5272;cursor:pointer;border-left:3px solid transparent;transition:all .12s;}
+.sidebar-item:hover{background:#f4f6fb;color:#1a1f36;}
+.sidebar-item.active{background:#eff6ff;color:#2563eb;border-left-color:#2563eb;font-weight:600;}
+.sidebar-item .icon{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
+.sidebar-divider{height:1px;background:#e0e4ef;margin:8px 16px;}
+.content-area{flex:1;min-width:0;padding:1.5rem;}
+.panel{display:none;} .panel.active{display:block;}
+.section-title{font-size:13px;font-weight:600;color:#4a5272;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.filter-select{background:#f4f6fb;border:1px solid #e0e4ef;border-radius:8px;padding:7px 11px;color:#1a1f36;font-family:inherit;font-size:13px;outline:none;cursor:pointer;}
+.btn-nav{background:#fff;border:1px solid #e0e4ef;border-radius:8px;padding:5px 11px;color:#4a5272;cursor:pointer;font-size:16px;}
+
+/* ESCALA */
+.escala-controls{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.escala-month-label{font-size:15px;font-weight:600;min-width:140px;text-align:center;}
+.escala-table-wrap{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:auto;}
+.escala-table{border-collapse:collapse;font-size:12px;min-width:100%;}
+.escala-table th{padding:8px 6px;text-align:center;font-size:10px;font-weight:700;color:#4a5272;background:#f4f6fb;border:1px solid #e0e4ef;white-space:nowrap;position:sticky;top:0;z-index:2;}
+.escala-table th.nome-col{text-align:left;padding-left:12px;position:sticky;left:0;z-index:3;min-width:90px;}
+.escala-table td{padding:6px 4px;text-align:center;border:1px solid #e0e4ef;font-size:10px;font-weight:600;white-space:nowrap;}
+.escala-table td.nome-col{text-align:left;padding-left:12px;font-size:12px;font-weight:600;color:#1a1f36;background:#fff;position:sticky;left:0;z-index:1;}
+.escala-table td.fds,.escala-table th.fds{background:#f3f4f6;color:#9ca3af;}
+.escala-table td.site{background:#d9ead3;color:#2d6a4f;}
+.escala-table td.home{background:#cfe2f3;color:#1e40af;}
+.escala-table td.ferias{background:#fce5cd;color:#92400e;}
+.escala-table td.feriado{background:#fff2cc;color:#92400e;}
+.escala-legenda{display:flex;gap:12px;flex-wrap:wrap;margin-top:1rem;}
+.escala-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5272;}
+.escala-leg-dot{width:12px;height:12px;border-radius:3px;}
+.escala-lista-wrap{display:flex;flex-direction:column;gap:14px;}
+.escala-lista-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
+.escala-lista-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:#f8faff;border-bottom:1px solid #e0e4ef;}
+.escala-lista-nome{font-size:13px;font-weight:700;color:#1a1f36;}
+.escala-lista-stats{display:flex;gap:8px;}
+.escala-stat{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.escala-stat-btn:hover{opacity:.85;transform:scale(1.04);}
+.escala-ana-btn{background:#f0f2f8;border:1.5px solid #e0e4ef;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#4a5272;cursor:pointer;font-family:inherit;transition:all .15s;}
+.escala-ana-btn:hover{background:#dbeafe;border-color:#2563eb;color:#2563eb;}
+.escala-ana-btn.ativo{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25);}
+.escala-stat-btn.ativo{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+.escala-lista-body{padding:.8rem 1.2rem;display:flex;flex-wrap:wrap;gap:4px;}
+.escala-dia-chip{padding:3px 7px;border-radius:6px;font-size:10px;font-weight:600;cursor:default;}
+
+.escala-stat-btn:hover{opacity:.85;transform:scale(1.04);}
+.escala-stat-btn.ativo{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+.escala-ana-btn{background:#f0f2f8;border:1.5px solid #e0e4ef;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#4a5272;cursor:pointer;font-family:inherit;transition:all .15s;}
+.escala-ana-btn:hover{background:#dbeafe;border-color:#2563eb;color:#2563eb;}
+.escala-ana-btn.ativo{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25);}
+.aniv-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.empty-msg{text-align:center;padding:2.5rem;color:#8b92b0;}
+
+/* TOOLTIP */
+.tooltip{position:fixed;background:#fff;border:1px solid #e0e4ef;border-radius:10px;padding:9px 13px;font-size:12px;color:#1a1f36;pointer-events:none;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.1);max-width:220px;display:none;}
+.tooltip strong{color:#2563eb;display:block;margin-bottom:3px;}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:#f4f6fb;}
+::-webkit-scrollbar-thumb{background:#c7cce0;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"><strong id="tip-name"></strong></div>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <button class="close-btn" onclick="closeLogin()">✕</button>
+    <div class="login-logo">📆</div>
+    <h2>🔒 Área Restrita</h2>
+    <p>Insira seu usuário e senha para acessar a Escala.</p>
+    <input class="login-field" type="text" id="login-user" placeholder="Usuário" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <input class="login-field" type="password" id="login-pass" placeholder="Senha" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">Usuário ou senha incorretos.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">📆</div>
+    <div>
+      <h1>Gestão Administrativa - Negócios SP</h1>
+      <span>Escala da Equipe</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="last-update" id="last-update">Carregando...</div>
+    <div class="user-pill" id="user-pill" style="display:none" onclick="doLogout()">
+      <div class="user-av" id="user-av"></div>
+      <span id="user-name-pill"></span>
+      <small>· Sair</small>
+    </div>
+  </div>
+</header>
+
+<div class="app-body">
+  <nav class="sidebar">
+    <div class="sidebar-label">Escala — Visões</div>
+    <div class="sidebar-item active" id="tab-escala-mensal" onclick="switchTab('escala-mensal')">
+      <span class="icon">🗓️</span><span>Mensal</span>
+    </div>
+    <div class="sidebar-item" id="tab-escala-lista" onclick="switchTab('escala-lista')">
+      <span class="icon">📋</span><span>Por Analista</span>
+    </div>
+
+  </nav>
+
+  <div class="content-area">
+
+    <div class="panel active" id="panel-escala-mensal">
+      <div class="escala-controls">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn-nav" onclick="escalaMesNav(-1)">&#8249;</button>
+          <div class="escala-month-label" id="escala-month-label"></div>
+          <button class="btn-nav" onclick="escalaMesNav(1)">&#8250;</button>
+        </div>
+        <select class="filter-select" id="escala-analista-filter" onchange="renderEscalaMensal()">
+          <option value="">Todos os analistas</option>
+          <option value="Bruno">Bruno</option>
+          <option value="Camila">Camila</option>
+          <option value="Carol">Carol</option>
+          <option value="Matheus">Matheus</option>
+          <option value="Samuel">Samuel</option>
+        </select>
+      </div>
+      <div class="escala-table-wrap" id="escala-table-wrap"></div>
+      <div class="escala-legenda">
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#d9ead3"></div>Site</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#cfe2f3"></div>Home Office</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#fce5cd"></div>Férias</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#fff2cc"></div>Feriado</div>
+        <div class="escala-leg-item"><div class="escala-leg-dot" style="background:#f3f4f6"></div>Final de semana</div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-escala-lista">
+      <div class="escala-controls" style="gap:16px;align-items:flex-start;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <select class="filter-select" id="escala-lista-mes" onchange="renderEscalaLista()">
+            <option value="">Todos os meses</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap" id="escala-analista-btns">
+          <span style="font-size:11px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.07em;margin-right:4px">Analista:</span>
+          <button class="escala-ana-btn ativo" id="escala-ana-Bruno" onclick="setEscalaAnalistaBtn('Bruno')">Bruno</button>
+          <button class="escala-ana-btn" id="escala-ana-Camila" onclick="setEscalaAnalistaBtn('Camila')">Camila</button>
+          <button class="escala-ana-btn" id="escala-ana-Carol" onclick="setEscalaAnalistaBtn('Carol')">Carol</button>
+          <button class="escala-ana-btn" id="escala-ana-Matheus" onclick="setEscalaAnalistaBtn('Matheus')">Matheus</button>
+          <button class="escala-ana-btn" id="escala-ana-Samuel" onclick="setEscalaAnalistaBtn('Samuel')">Samuel</button>
+        </div>
+      </div>
+      <div class="escala-lista-wrap" id="escala-lista-wrap"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── USUARIOS ──────────────────────────────────────────────────────────────────
+const USERS = [
+  {user:'fernando', pass:'franco2026',  nome:'Fernando Franco',  role:'gestor'},
+  {user:'bruno',    pass:'saraiva2026', nome:'Bruno Saraiva',    role:'analista'},
+  {user:'camila',   pass:'camila2026',  nome:'Camila Barboza',   role:'analista'},
+  {user:'carolina', pass:'carol2026',   nome:'Carolina Andrade', role:'analista'},
+  {user:'matheus',  pass:'matheus2026', nome:'Matheus Lopes',    role:'analista'},
+  {user:'samuel',   pass:'samuel2026',  nome:'Samuel Pinto',     role:'analista'},
+];
+let currentUser = null;
+
+// ── ESCALA DATA ───────────────────────────────────────────────────────────────
+// ESCALA_LAST_UPDATE: 26/05/2026 12:31
+const ESCALA_DATA = {
+  'Bruno': {"2026-04-27": "férias", "2026-04-28": "férias", "2026-04-29": "férias", "2026-04-30": "férias", "2026-05-01": "férias", "2026-05-02": "férias", "2026-05-03": "férias", "2026-05-04": "férias", "2026-05-05": "férias", "2026-05-06": "férias", "2026-05-07": "férias", "2026-05-08": "férias", "2026-05-09": "férias", "2026-05-10": "férias", "2026-05-11": "férias", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "home", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "home", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "site", "2026-05-28": "home", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "home", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "home", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "home", "2026-06-17": "site", "2026-06-18": "home", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "home", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "home", "2026-07-07": "site", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "home", "2026-07-14": "site", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "home", "2026-07-21": "site", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "home", "2026-07-28": "site", "2026-07-29": "site", "2026-07-30": "home", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "home", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "home", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "home", "2026-09-01": "site", "2026-09-02": "home", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "home", "2026-09-16": "site", "2026-09-17": "home", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "home", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "home", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "home", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "home", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "home", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "home", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "home", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "home", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "home", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "home", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "home", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "home", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "home", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "home", "2026-12-31": "site"},
+  'Camila': {"2026-04-27": "home", "2026-04-28": "site", "2026-04-29": "site", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "home", "2026-05-06": "site", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "site", "2026-05-13": "home", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "home", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "site", "2026-05-28": "site", "2026-05-29": "home", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "home", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "home", "2026-06-10": "site", "2026-06-11": "site", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "home", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "home", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "site", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "home", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "site", "2026-07-08": "site", "2026-07-09": "site", "2026-07-10": "home", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "site", "2026-07-15": "home", "2026-07-16": "site", "2026-07-17": "home", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "site", "2026-07-22": "site", "2026-07-23": "site", "2026-07-24": "home", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "site", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "home", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "home", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "home", "2026-08-25": "site", "2026-08-26": "home", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "home", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "home", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "home", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "home", "2026-09-29": "site", "2026-09-30": "home", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "home", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "home", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "home", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "home", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "home", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "home", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "home", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "home", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "home", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "home", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "home", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "site"},
+  'Carol': {"2026-04-27": "site", "2026-04-28": "home", "2026-04-29": "site", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "site", "2026-05-06": "home", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "home", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "home", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "home", "2026-05-27": "site", "2026-05-28": "site", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "site", "2026-06-03": "site", "2026-06-04": "feriado", "2026-06-05": "home", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "site", "2026-06-10": "home", "2026-06-11": "site", "2026-06-12": "home", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "site", "2026-06-17": "site", "2026-06-18": "site", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "home", "2026-06-23": "site", "2026-06-24": "home", "2026-06-25": "site", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "site", "2026-07-08": "home", "2026-07-09": "site", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "home", "2026-07-15": "site", "2026-07-16": "site", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "site", "2026-07-22": "home", "2026-07-23": "site", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "home", "2026-07-29": "site", "2026-07-30": "site", "2026-07-31": "home", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "site", "2026-08-05": "site", "2026-08-06": "home", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "home", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "site", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "home", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "home", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "home", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "home", "2026-09-22": "site", "2026-09-23": "site", "2026-09-24": "home", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "home", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "home", "2026-10-15": "site", "2026-10-16": "home", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "home", "2026-10-27": "site", "2026-10-28": "site", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "home", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "home", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "home", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "home", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "home", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "home", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "home", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "home", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "site"},
+  'Matheus': {"2026-04-27": "site", "2026-04-28": "site", "2026-04-29": "home", "2026-04-30": "site", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "site", "2026-05-05": "site", "2026-05-06": "site", "2026-05-07": "home", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "site", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "home", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "site", "2026-05-21": "site", "2026-05-22": "home", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "férias", "2026-05-26": "férias", "2026-05-27": "férias", "2026-05-28": "férias", "2026-05-29": "férias", "2026-05-30": "férias", "2026-05-31": "férias", "2026-06-01": "férias", "2026-06-02": "férias", "2026-06-03": "férias", "2026-06-04": "feriado", "2026-06-05": "férias", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "férias", "2026-06-09": "férias", "2026-06-10": "férias", "2026-06-11": "férias", "2026-06-12": "férias", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "férias", "2026-06-16": "férias", "2026-06-17": "férias", "2026-06-18": "férias", "2026-06-19": "férias", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "férias", "2026-06-23": "férias", "2026-06-24": "férias", "2026-06-25": "home", "2026-06-26": "site", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "home", "2026-06-30": "site", "2026-07-01": "home", "2026-07-02": "site", "2026-07-03": "home", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "site", "2026-07-07": "home", "2026-07-08": "site", "2026-07-09": "home", "2026-07-10": "site", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "site", "2026-07-14": "site", "2026-07-15": "site", "2026-07-16": "home", "2026-07-17": "site", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "site", "2026-07-21": "home", "2026-07-22": "site", "2026-07-23": "home", "2026-07-24": "site", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "site", "2026-07-28": "site", "2026-07-29": "home", "2026-07-30": "site", "2026-07-31": "site", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "site", "2026-08-04": "home", "2026-08-05": "site", "2026-08-06": "site", "2026-08-07": "site", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "site", "2026-08-12": "site", "2026-08-13": "site", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "site", "2026-08-18": "site", "2026-08-19": "site", "2026-08-20": "home", "2026-08-21": "site", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "home", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "site", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "home", "2026-09-02": "site", "2026-09-03": "site", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "site", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "home", "2026-09-15": "site", "2026-09-16": "home", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "site", "2026-09-23": "home", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "site", "2026-09-30": "site", "2026-10-01": "site", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "home", "2026-10-06": "site", "2026-10-07": "home", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "site", "2026-10-14": "site", "2026-10-15": "site", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "home", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "home", "2026-10-28": "site", "2026-10-29": "home", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "site", "2026-11-05": "site", "2026-11-06": "home", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "site", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "home", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "site", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "home", "2026-11-24": "site", "2026-11-25": "site", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "home", "2026-12-02": "site", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "home", "2026-12-08": "site", "2026-12-09": "site", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "site", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "home", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "home", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "site", "2026-12-29": "home", "2026-12-30": "site", "2026-12-31": "site"},
+  'Samuel': {"2026-04-27": "site", "2026-04-28": "site", "2026-04-29": "site", "2026-04-30": "home", "2026-05-01": "feriado", "2026-05-02": "fds", "2026-05-03": "fds", "2026-05-04": "home", "2026-05-05": "site", "2026-05-06": "site", "2026-05-07": "site", "2026-05-08": "site", "2026-05-09": "fds", "2026-05-10": "fds", "2026-05-11": "site", "2026-05-12": "home", "2026-05-13": "site", "2026-05-14": "site", "2026-05-15": "site", "2026-05-16": "fds", "2026-05-17": "fds", "2026-05-18": "site", "2026-05-19": "site", "2026-05-20": "home", "2026-05-21": "site", "2026-05-22": "site", "2026-05-23": "fds", "2026-05-24": "fds", "2026-05-25": "site", "2026-05-26": "site", "2026-05-27": "home", "2026-05-28": "site", "2026-05-29": "site", "2026-05-30": "fds", "2026-05-31": "fds", "2026-06-01": "site", "2026-06-02": "site", "2026-06-03": "home", "2026-06-04": "feriado", "2026-06-05": "site", "2026-06-06": "fds", "2026-06-07": "fds", "2026-06-08": "site", "2026-06-09": "site", "2026-06-10": "site", "2026-06-11": "home", "2026-06-12": "site", "2026-06-13": "fds", "2026-06-14": "fds", "2026-06-15": "site", "2026-06-16": "site", "2026-06-17": "home", "2026-06-18": "site", "2026-06-19": "site", "2026-06-20": "fds", "2026-06-21": "fds", "2026-06-22": "site", "2026-06-23": "home", "2026-06-24": "site", "2026-06-25": "site", "2026-06-26": "home", "2026-06-27": "fds", "2026-06-28": "fds", "2026-06-29": "site", "2026-06-30": "site", "2026-07-01": "site", "2026-07-02": "site", "2026-07-03": "site", "2026-07-04": "fds", "2026-07-05": "fds", "2026-07-06": "férias", "2026-07-07": "férias", "2026-07-08": "férias", "2026-07-09": "férias", "2026-07-10": "férias", "2026-07-11": "fds", "2026-07-12": "fds", "2026-07-13": "férias", "2026-07-14": "férias", "2026-07-15": "férias", "2026-07-16": "férias", "2026-07-17": "férias", "2026-07-18": "fds", "2026-07-19": "fds", "2026-07-20": "férias", "2026-07-21": "férias", "2026-07-22": "férias", "2026-07-23": "férias", "2026-07-24": "férias", "2026-07-25": "fds", "2026-07-26": "fds", "2026-07-27": "férias", "2026-07-28": "férias", "2026-07-29": "férias", "2026-07-30": "férias", "2026-07-31": "férias", "2026-08-01": "fds", "2026-08-02": "fds", "2026-08-03": "férias", "2026-08-04": "férias", "2026-08-05": "home", "2026-08-06": "site", "2026-08-07": "home", "2026-08-08": "fds", "2026-08-09": "fds", "2026-08-10": "site", "2026-08-11": "home", "2026-08-12": "site", "2026-08-13": "home", "2026-08-14": "site", "2026-08-15": "fds", "2026-08-16": "fds", "2026-08-17": "home", "2026-08-18": "site", "2026-08-19": "home", "2026-08-20": "site", "2026-08-21": "home", "2026-08-22": "fds", "2026-08-23": "fds", "2026-08-24": "site", "2026-08-25": "site", "2026-08-26": "site", "2026-08-27": "site", "2026-08-28": "home", "2026-08-29": "fds", "2026-08-30": "fds", "2026-08-31": "site", "2026-09-01": "site", "2026-09-02": "site", "2026-09-03": "home", "2026-09-04": "site", "2026-09-05": "fds", "2026-09-06": "fds", "2026-09-07": "feriado", "2026-09-08": "site", "2026-09-09": "site", "2026-09-10": "home", "2026-09-11": "site", "2026-09-12": "fds", "2026-09-13": "fds", "2026-09-14": "site", "2026-09-15": "site", "2026-09-16": "site", "2026-09-17": "site", "2026-09-18": "site", "2026-09-19": "fds", "2026-09-20": "fds", "2026-09-21": "site", "2026-09-22": "home", "2026-09-23": "site", "2026-09-24": "site", "2026-09-25": "site", "2026-09-26": "fds", "2026-09-27": "fds", "2026-09-28": "site", "2026-09-29": "home", "2026-09-30": "site", "2026-10-01": "home", "2026-10-02": "site", "2026-10-03": "fds", "2026-10-04": "fds", "2026-10-05": "site", "2026-10-06": "site", "2026-10-07": "site", "2026-10-08": "site", "2026-10-09": "site", "2026-10-10": "fds", "2026-10-11": "fds", "2026-10-12": "feriado", "2026-10-13": "home", "2026-10-14": "site", "2026-10-15": "home", "2026-10-16": "site", "2026-10-17": "fds", "2026-10-18": "fds", "2026-10-19": "site", "2026-10-20": "site", "2026-10-21": "site", "2026-10-22": "site", "2026-10-23": "site", "2026-10-24": "fds", "2026-10-25": "fds", "2026-10-26": "site", "2026-10-27": "site", "2026-10-28": "home", "2026-10-29": "site", "2026-10-30": "site", "2026-10-31": "fds", "2026-11-01": "fds", "2026-11-02": "feriado", "2026-11-03": "site", "2026-11-04": "home", "2026-11-05": "site", "2026-11-06": "site", "2026-11-07": "fds", "2026-11-08": "fds", "2026-11-09": "site", "2026-11-10": "home", "2026-11-11": "site", "2026-11-12": "site", "2026-11-13": "site", "2026-11-14": "fds", "2026-11-15": "fds", "2026-11-16": "site", "2026-11-17": "site", "2026-11-18": "home", "2026-11-19": "site", "2026-11-20": "feriado", "2026-11-21": "fds", "2026-11-22": "fds", "2026-11-23": "site", "2026-11-24": "site", "2026-11-25": "home", "2026-11-26": "site", "2026-11-27": "site", "2026-11-28": "fds", "2026-11-29": "fds", "2026-11-30": "site", "2026-12-01": "site", "2026-12-02": "home", "2026-12-03": "site", "2026-12-04": "site", "2026-12-05": "fds", "2026-12-06": "fds", "2026-12-07": "site", "2026-12-08": "site", "2026-12-09": "home", "2026-12-10": "site", "2026-12-11": "site", "2026-12-12": "fds", "2026-12-13": "fds", "2026-12-14": "home", "2026-12-15": "site", "2026-12-16": "site", "2026-12-17": "site", "2026-12-18": "site", "2026-12-19": "fds", "2026-12-20": "fds", "2026-12-21": "site", "2026-12-22": "site", "2026-12-23": "site", "2026-12-24": "site", "2026-12-25": "feriado", "2026-12-26": "fds", "2026-12-27": "fds", "2026-12-28": "home", "2026-12-29": "site", "2026-12-30": "site", "2026-12-31": "home"},
+};
+
+// ── ESTADO ───────────────────────────────────────────────────────────────────
+let escalaMes, escalaAno, escalaAnalistaAtivo = 'Bruno';
+const ESCALA_MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const ESCALA_ANALISTAS = ['Bruno','Camila','Carol','Matheus','Samuel'];
+const escalaFiltroAtivo = {};
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim().toLowerCase();
+  const p=document.getElementById('login-pass').value;
+  const found=USERS.find(x=>x.user===u&&x.pass===p);
+  if(!found){document.getElementById('login-error').style.display='block';return;}
+  currentUser=found;
+  document.getElementById('login-overlay').style.display='none';
+  document.getElementById('user-pill').style.display='flex';
+  document.getElementById('user-av').textContent=found.nome.split(' ').map(w=>w[0]).slice(0,2).join('');
+  document.getElementById('user-name-pill').textContent=found.nome.split(' ')[0];
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById('login-overlay').style.display='flex';
+  document.getElementById('user-pill').style.display='none';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').style.display='none';
+}
+
+function closeLogin(){
+  document.getElementById('login-overlay').style.display='none';
+}
+
+// ── TOOLTIP ───────────────────────────────────────────────────────────────────
+function showTipSimple(e,text){
+  const t=document.getElementById('tooltip');
+  document.getElementById('tip-name').textContent=text;
+  t.style.display='block';
+  t.style.left=(e.clientX+14)+'px';
+  t.style.top=(e.clientY+14)+'px';
+}
+function hideTip(){document.getElementById('tooltip').style.display='none';}
+document.addEventListener('mousemove',e=>{
+  const t=document.getElementById('tooltip');
+  if(t.style.display!=='none'){t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY+14)+'px';}
+});
+
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────────────────────
+function switchTab(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar-item[id^="tab-"]').forEach(t=>t.classList.remove('active'));
+  const tab=document.getElementById('tab-'+name);
+  if(tab) tab.classList.add('active');
+  if(name==='escala-mensal') renderEscalaMensal();
+  if(name==='escala-lista') renderEscalaLista();
+  window.scrollTo(0,0);
+}
+
+// ── ESCALA HELPERS ────────────────────────────────────────────────────────────
+function initials(n){const p=n.trim().split(' ');return(p[0][0]+(p[p.length-1][0])).toUpperCase();}
+
+function escalaValClass(v){
+  if(!v) return 'fds';
+  const vl=v.toLowerCase();
+  if(vl==='site') return 'site';
+  if(vl==='home') return 'home';
+  if(vl.includes('férias')||vl.includes('ferias')) return 'ferias';
+  if(vl==='feriado') return 'feriado';
+  return 'fds';
+}
+
+function escalaValLabel(v){
+  if(!v) return '';
+  const vl=v.toLowerCase();
+  if(vl==='site') return 'Site';
+  if(vl==='home') return 'HO';
+  if(vl.includes('férias')||vl.includes('ferias')) return 'Fér';
+  if(vl==='feriado') return 'Fer!';
+  return vl;
+}
+
+function escalaMesNav(d){
+  escalaMes+=d;
+  if(escalaMes>11){escalaMes=0;escalaAno++;}
+  if(escalaMes<0){escalaMes=11;escalaAno--;}
+  renderEscalaMensal();
+}
+
+// ── ESCALA MENSAL ─────────────────────────────────────────────────────────────
+function renderEscalaMensal(){
+  const label=ESCALA_MESES[escalaMes]+' '+escalaAno;
+  document.getElementById('escala-month-label').textContent=label;
+  const filtro=document.getElementById('escala-analista-filter')?.value||'';
+  const analistas=filtro?[filtro]:ESCALA_ANALISTAS;
+  const diasMes=[];
+  const d=new Date(escalaAno,escalaMes,1);
+  while(d.getMonth()===escalaMes){diasMes.push(new Date(d));d.setDate(d.getDate()+1);}
+  const diasSemana=['D','S','T','Q','Q','S','S'];
+  let html='<table class="escala-table"><thead><tr><th class="nome-col">Analista</th>';
+  diasMes.forEach(dia=>{
+    const dow=dia.getDay();
+    const isFds=dow===0||dow===6;
+    html+=`<th class="${isFds?'fds':''}">${dia.getDate()}<br><span style="font-size:9px;opacity:.7">${diasSemana[dow]}</span></th>`;
+  });
+  html+='</tr></thead><tbody>';
+  analistas.forEach(nome=>{
+    html+=`<tr><td class="nome-col">${nome}</td>`;
+    diasMes.forEach(dia=>{
+      const key=`${dia.getFullYear()}-${String(dia.getMonth()+1).padStart(2,'0')}-${String(dia.getDate()).padStart(2,'0')}`;
+      const val=ESCALA_DATA[nome]?.[key]||'';
+      const cls=escalaValClass(val);
+      const dow=dia.getDay();
+      const isFds=dow===0||dow===6;
+      html+=`<td class="${isFds&&!val?'fds':cls}">${escalaValLabel(val)}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('escala-table-wrap').innerHTML=html;
+}
+
+// ── ESCALA POR ANALISTA ───────────────────────────────────────────────────────
+function setEscalaAnalistaBtn(nome){
+  escalaAnalistaAtivo=nome;
+  document.querySelectorAll('.escala-ana-btn').forEach(b=>b.classList.remove('ativo'));
+  const btn=document.getElementById('escala-ana-'+nome);
+  if(btn) btn.classList.add('ativo');
+  renderEscalaLista();
+}
+
+function renderEscalaListaCard(nome){
+  const filtroMes=document.getElementById('escala-lista-mes')?.value||'';
+  const idx=ESCALA_ANALISTAS.indexOf(nome);
+  const col=['#2563eb','#7c3aed','#059669','#d97706','#db2777'][idx];
+  const dados=ESCALA_DATA[nome]||{};
+  let dias=Object.entries(dados);
+  if(filtroMes) dias=dias.filter(([k])=>k.startsWith(filtroMes));
+  const countSite=dias.filter(([,v])=>v==='site').length;
+  const countHome=dias.filter(([,v])=>v==='home').length;
+  const countFer=dias.filter(([,v])=>v&&v.includes('férias')).length;
+  const countFeriado=dias.filter(([,v])=>v==='feriado').length;
+  const total=dias.length;
+  const ativo=escalaFiltroAtivo[nome]||null;
+  let diasFiltrados=dias;
+  if(ativo==='site') diasFiltrados=dias.filter(([,v])=>v==='site');
+  if(ativo==='home') diasFiltrados=dias.filter(([,v])=>v==='home');
+  if(ativo==='ferias') diasFiltrados=dias.filter(([,v])=>v&&v.includes('férias'));
+  if(ativo==='feriado') diasFiltrados=dias.filter(([,v])=>v==='feriado');
+  const CHIP={site:'background:#d9ead3;color:#2d6a4f',home:'background:#cfe2f3;color:#1e40af',ferias:'background:#fce5cd;color:#92400e',feriado:'background:#fff2cc;color:#92400e',fds:'background:#f3f4f6;color:#9ca3af'};
+  function statBtn(tipo,bg,cor,label,count){
+    if(!count) return '';
+    const isA=ativo===tipo;
+    return `<span class="escala-stat escala-stat-btn ${isA?'ativo':''}" style="background:${isA?bg:bg};color:${cor};cursor:pointer;border:1.5px solid ${isA?cor:'transparent'}" onclick="setEscalaFiltro('${nome}','${tipo}')">${label}: ${count}</span>`;
+  }
+  const todosAtivo=!ativo;
+  const todosBtn=`<span class="escala-stat escala-stat-btn ${todosAtivo?'ativo':''}" style="background:${todosAtivo?'#1a1f36':'#f0f2f8'};color:${todosAtivo?'#fff':'#4a5272'};cursor:pointer;border:1.5px solid ${todosAtivo?'#1a1f36':'transparent'}" onclick="setEscalaFiltro('${nome}',null)">Todos: ${total}</span>`;
+  const card=document.getElementById('escala-card-'+nome);
+  if(!card) return;
+  card.querySelector('.escala-lista-stats').innerHTML=todosBtn+statBtn('site','#d9ead3','#2d6a4f','Site',countSite)+statBtn('home','#cfe2f3','#1e40af','HO',countHome)+statBtn('ferias','#fce5cd','#92400e','Férias',countFer)+statBtn('feriado','#fff2cc','#92400e','Feriado',countFeriado);
+  card.querySelector('.escala-lista-body').innerHTML=diasFiltrados.map(([k,v])=>{
+    const cls=escalaValClass(v);
+    const c=CHIP[cls]||CHIP.fds;
+    const[,mes,dia]=k.split('-');
+    return `<div class="escala-dia-chip" style="${c}" title="${k}">${dia}/${mes}<br><span style="font-size:9px">${escalaValLabel(v)}</span></div>`;
+  }).join('');
+}
+
+function setEscalaFiltro(nome,tipo){
+  escalaFiltroAtivo[nome]=escalaFiltroAtivo[nome]===tipo?null:tipo;
+  renderEscalaListaCard(nome);
+}
+
+function renderEscalaLista(){
+  const filtroMes=document.getElementById('escala-lista-mes')?.value||'';
+  ESCALA_ANALISTAS.forEach(n=>escalaFiltroAtivo[n]=null);
+  const analistasVisiveis=escalaAnalistaAtivo?[escalaAnalistaAtivo]:ESCALA_ANALISTAS;
+  let html='';
+  analistasVisiveis.forEach((nome)=>{
+    const idx=ESCALA_ANALISTAS.indexOf(nome);
+    const col=['#2563eb','#7c3aed','#059669','#d97706','#db2777'][idx];
+    html+=`<div class="escala-lista-card" id="escala-card-${nome}">
+      <div class="escala-lista-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="aniv-avatar" style="width:34px;height:34px;font-size:11px;background:${col}18;color:${col}">${initials(nome+' x')}</div>
+          <span class="escala-lista-nome">${nome}</span>
+        </div>
+        <div class="escala-lista-stats" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"></div>
+      </div>
+      <div class="escala-lista-body" style="display:flex;flex-wrap:wrap;gap:4px;padding:.8rem 1.2rem"></div>
+    </div>`;
+  });
+  document.getElementById('escala-lista-wrap').innerHTML=html;
+  analistasVisiveis.forEach(nome=>renderEscalaListaCard(nome));
+}
+
+function initEscalaLista(){
+  const sel=document.getElementById('escala-lista-mes');
+  if(!sel) return;
+  const meses=new Set();
+  Object.values(ESCALA_DATA).forEach(dados=>Object.keys(dados).forEach(k=>meses.add(k.slice(0,7))));
+  [...meses].sort().forEach(m=>{
+    const[ano,mes]=m.split('-');
+    const opt=document.createElement('option');
+    opt.value=m;
+    opt.textContent=ESCALA_MESES[parseInt(mes)-1]+' '+ano;
+    sel.appendChild(opt);
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+const now=new Date();
+escalaMes=now.getMonth();
+escalaAno=now.getFullYear();
+const ts='26/05/2026 12:31';
+document.getElementById('last-update').textContent='Atualizado: '+ts;
+initEscalaLista();
+renderEscalaMensal();
+</script>
+</body>
+</html>
