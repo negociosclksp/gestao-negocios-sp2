@@ -4,7 +4,7 @@ from openpyxl import load_workbook
 from datetime import datetime
 
 # ── CAMINHOS ─────────────────────────────────────────────────────────────────
-PASTA        = r"C:\Users\e5003419\Documents\Team-Dashboard"
+PASTA        = r"C:\Users\e5003419\Documents\gestao-negocios-sp2"
 HTML         = os.path.join(PASTA, "index.html")
 EXCEL_FERIAS = os.path.join(PASTA, "F\u00c9RIAS_2025-2026.xlsx")
 EXCEL_ANIV   = os.path.join(PASTA, "FolgaAniverssario.xlsx")

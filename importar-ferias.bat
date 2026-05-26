@@ -25,7 +25,7 @@ echo.
 :: Publicar no GitHub automaticamente
 where git >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Git nao encontrado. Suba o index.html manualmente no GitHub.
+    echo Git nao encontrado. Use o GitHub Desktop para fazer o commit e push.
     echo.
     pause
     exit /b 0
@@ -38,12 +38,9 @@ git commit -m "Atualiza dashboard %date% %time%"
 git push
 
 if %errorlevel% == 0 (
-    echo.
     echo Publicado no GitHub com sucesso!
 ) else (
-    echo.
-    echo Erro ao publicar no GitHub.
-    echo Suba o index.html manualmente.
+    echo Erro no push. Use o GitHub Desktop para publicar.
 )
 
 echo.
