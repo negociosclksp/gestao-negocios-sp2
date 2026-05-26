@@ -25,21 +25,24 @@ echo.
 :: Publicar no GitHub automaticamente
 where git >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Git nao encontrado. Use o GitHub Desktop para fazer o commit e push.
+    echo Git nao encontrado. Use o GitHub Desktop para publicar.
     echo.
     pause
     exit /b 0
 )
 
-echo Publicando no GitHub...
+echo Sincronizando com GitHub...
 cd /d "%~dp0"
-git add index.html
+git pull --rebase
+git add index.html escala.html
 git commit -m "Atualiza dashboard %date% %time%"
 git push
 
 if %errorlevel% == 0 (
+    echo.
     echo Publicado no GitHub com sucesso!
 ) else (
+    echo.
     echo Erro no push. Use o GitHub Desktop para publicar.
 )
 

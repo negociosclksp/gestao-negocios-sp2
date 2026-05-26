@@ -137,7 +137,23 @@ escala_js.append("};")
 content = re.sub(r"const ESCALA_DATA = \{.*?\n\};", "\n".join(escala_js), content, flags=re.DOTALL)
 print(f"Escala: {len(analistas4)} analistas, {len(dates4)} datas")
 
-# ── SALVA ─────────────────────────────────────────────────────────────────────
+# ── SALVA index.html ──────────────────────────────────────────────────────────
 with open(HTML, "w", encoding="utf-8") as f:
     f.write(content)
+print(f"index.html: OK")
+
+# ── SALVA escala.html ─────────────────────────────────────────────────────────
+ESCALA_HTML = os.path.join(PASTA, "escala.html")
+if os.path.exists(ESCALA_HTML):
+    with open(ESCALA_HTML, "r", encoding="utf-8") as f:
+        escala_content = f.read()
+    new_escala_js = "\n".join(escala_js)
+    escala_content = re.sub(r"const ESCALA_DATA = \{.*?\n\};", new_escala_js, escala_content, flags=re.DOTALL)
+    escala_content = re.sub(r"// ESCALA_LAST_UPDATE: .*", "// ESCALA_LAST_UPDATE: " + ts, escala_content)
+    with open(ESCALA_HTML, "w", encoding="utf-8") as f:
+        f.write(escala_content)
+    print(f"escala.html: OK")
+else:
+    print(f"escala.html: nao encontrado em {ESCALA_HTML}")
+
 print(f"\nDashboard atualizado com sucesso! [{ts}]")
