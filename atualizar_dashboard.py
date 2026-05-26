@@ -97,7 +97,7 @@ print(f"Aniversarios: {len(aniv_lines)} colaboradores")
 
 # ── PDI ───────────────────────────────────────────────────────────────────────
 def esc(s):
-    return str(s).replace("'", "\\'").replace("`", "\\`").replace("\n", " ").strip()
+    return str(s).replace("'", "\\'").replace("`", "\\`").replace('"', '\u201c').replace("\n", " ").strip()
 
 wb3 = load_workbook(EXCEL_PDI, read_only=True, data_only=True)
 sheets_pdi = ["BRUNO_SARAIVA","CAMILA_DE_MORAES","CAROLINA_ANDRADE","MATHEUS_LOPES","SAMUEL_PINTO"]
