@@ -73,7 +73,7 @@ for row in list(ws.iter_rows(values_only=True))[1:]:
 
 content = re.sub(r"// @@DATA_START@@.*?// @@DATA_END@@", "// @@DATA_START@@\n" + "\n".join(ferias_lines) + "\n// @@DATA_END@@", content, flags=re.DOTALL)
 content = re.sub(r"// LAST_UPDATE: .*", "// LAST_UPDATE: " + ts, content)
-content = re.sub(r"const ts = \'.*?\';", "const ts = \'" + ts + "\';", content)
+content = re.sub(r"const ts='.*?';", "const ts='" + ts + "';", content)
 print(f"Ferias: {len(ferias_lines)} colaboradores")
 
 # ── ANIVERSARIOS ──────────────────────────────────────────────────────────────
