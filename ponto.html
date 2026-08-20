@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ponto — Gestão Negócios SP</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#1a1f36;min-height:100vh;}
+.header{background:#fff;border-bottom:1px solid #e0e4ef;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.logo{width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.header h1{font-size:15px;font-weight:600;}
+.header span{font-size:12px;color:#8b92b0;}
+.periodo-badge{font-size:11px;background:#f0f2f8;border:1px solid #e0e4ef;padding:4px 12px;border-radius:20px;color:#4a5272;}
+.upload-wrap{max-width:800px;margin:3rem auto;padding:0 1.5rem;}
+.upload-box{border:2px dashed #c7cce0;border-radius:16px;padding:3rem;text-align:center;cursor:pointer;transition:all .2s;background:#fff;}
+.upload-box:hover,.drag{border-color:#2563eb !important;background:#eff6ff !important;}
+.upload-icon{font-size:48px;margin-bottom:1rem;}
+.upload-box h2{font-size:16px;font-weight:600;margin-bottom:8px;}
+.upload-box p{font-size:13px;color:#8b92b0;}
+.upload-btn{margin-top:1.2rem;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+#file-input{display:none;}
+.loading{text-align:center;padding:3rem;font-size:14px;color:#8b92b0;}
+.spinner{width:32px;height:32px;border:3px solid #e0e4ef;border-top:3px solid #2563eb;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.dashboard{max-width:1100px;margin:0 auto;padding:1.5rem;}
+.section-title{font-size:11px;font-weight:700;color:#8b92b0;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem;}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1.5rem;}
+.sum-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1rem 1.2rem;}
+.sum-nome{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.sum-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;}
+.sum-row .lbl{color:#8b92b0;}
+.sum-row .val{font-weight:600;}
+.pos{color:#059669;} .neg{color:#dc2626;} .warn{color:#d97706;}
+.bh-bar{height:5px;background:#e0e4ef;border-radius:3px;margin-top:8px;overflow:hidden;}
+.bh-fill{height:100%;border-radius:3px;}
+.tabs{display:flex;gap:4px;background:#fff;border:1px solid #e0e4ef;border-radius:10px;padding:4px;width:fit-content;margin-bottom:1rem;}
+.tab{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:500;color:#4a5272;cursor:pointer;border:none;background:none;font-family:inherit;transition:all .12s;}
+.tab.active{background:#2563eb;color:#fff;}
+.tab:hover:not(.active){background:#f4f6fb;}
+.ana-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;}
+.ana-btn{background:#f0f2f8;border:1.5px solid #e0e4ef;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#4a5272;cursor:pointer;font-family:inherit;transition:all .12s;}
+.ana-btn.ativo{color:#fff !important;border-color:transparent !important;}
+.tbl-wrap{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:auto;}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{padding:9px 10px;text-align:left;font-size:10px;font-weight:700;color:#4a5272;text-transform:uppercase;letter-spacing:.06em;background:#f8faff;border-bottom:1px solid #e0e4ef;}
+.tbl td{padding:8px 10px;border-bottom:1px solid #f0f2f8;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#f8faff;}
+.badge{display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.b-ok{background:#ecfdf5;color:#065f46;} .b-late{background:#fff1f2;color:#991b1b;}
+.b-extra{background:#eff6ff;color:#1e40af;} .b-inv{background:#fff7ed;color:#92400e;}
+.b-fer{background:#f5f3ff;color:#4c1d95;}
+.bh-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.bh-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1.2rem;}
+.bh-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid #f0f2f8;}
+.bh-row:last-child{border-bottom:none;font-weight:700;font-size:14px;padding-top:10px;margin-top:4px;}
+.bh-row .lbl{color:#8b92b0;}
+.atraso-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+.atraso-card{background:#fff;border:1px solid #e0e4ef;border-radius:12px;overflow:hidden;}
+.atraso-hdr{padding:.8rem 1rem;background:#f8faff;border-bottom:1px solid #e0e4ef;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.atraso-item{display:flex;justify-content:space-between;align-items:center;padding:8px 1rem;border-bottom:1px solid #f0f2f8;font-size:12px;}
+.atraso-item:last-child{border-bottom:none;}
+.atraso-detail{color:#8b92b0;font-size:11px;}
+.panel{display:none;} .panel.active{display:block;}
+.nova-carga{background:#fff;border:1px solid #e0e4ef;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:#4a5272;}
+.nova-carga:hover{background:#f4f6fb;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">⏱️</div>
+    <div><h1>Espelho de Ponto</h1><span>Gestão Negócios SP</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div id="periodo-badge" class="periodo-badge" style="display:none"></div>
+    <button class="nova-carga" id="btn-nova" style="display:none" onclick="resetar()">↩ Novo PDF</button>
+  </div>
+</header>
+
+<div id="sec-upload" class="upload-wrap">
+  <div class="upload-box" id="drop-zone">
+    <div class="upload-icon">📄</div>
+    <h2>Espelho de ponto — Linkcall</h2>
+    <p>Arraste o PDF aqui ou clique para selecionar</p>
+    <button class="upload-btn" onclick="document.getElementById('file-input').click()">Selecionar PDF</button>
+    <input type="file" id="file-input" accept=".pdf">
+  </div>
+</div>
+
+<div id="sec-loading" style="display:none" class="upload-wrap">
+  <div class="loading"><div class="spinner"></div>Lendo PDF...</div>
+</div>
+
+<div id="sec-dashboard" style="display:none" class="dashboard">
+  <div class="section-title">Resumo do time — período</div>
+  <div class="summary-grid" id="sum-grid"></div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="goTab('dias')">📋 Dias</button>
+    <button class="tab" onclick="goTab('bh')">🏦 Banco de horas</button>
+    <button class="tab" onclick="goTab('atrasos')">⚠️ Atrasos</button>
+  </div>
+
+  <div id="panel-dias" class="panel active">
+    <div class="ana-btns" id="ana-btns"></div>
+    <div id="jornada-info" style="font-size:12px;color:#4a5272;background:#f8faff;border:1px solid #e0e4ef;border-radius:8px;padding:6px 12px;margin-bottom:8px;display:inline-block"></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>Data</th><th>Dia</th><th>Entrada</th><th>Saída</th>
+          <th>Trabalhado</th><th>Atraso</th><th>Extra BH</th><th>Status</th>
+        </tr></thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="panel-bh" class="panel">
+    <div class="bh-cards" id="bh-cards"></div>
+  </div>
+
+  <div id="panel-atrasos" class="panel">
+    <div class="ana-btns" id="at-btns"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+      <div>
+        <div class="section-title" style="margin-bottom:.6rem">Dias com atraso</div>
+        <div style="font-size:11px;color:#8b92b0;background:#f8faff;border:1px solid #e0e4ef;border-radius:6px;padding:4px 10px;margin-bottom:8px;display:inline-block">⏱️ Tolerância de <b>10 minutos</b> aplicada</div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Data</th><th>Dia</th><th>Entrada</th><th>Atraso</th></tr></thead>
+            <tbody id="at-tbl"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="section-title" style="margin-bottom:.6rem">Atrasos no mês</div>
+        <div style="background:#fff;border:1px solid #e0e4ef;border-radius:12px;padding:1rem;">
+          <canvas id="at-chart" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let DATA=[], ativo=0;
+const CORES=['#2563eb','#7c3aed','#059669','#d97706'];
+const DIAS_PT={SEG:'Segunda',TER:'Terça',QUA:'Quarta',QUI:'Quinta',SEX:'Sexta'};
+
+// Upload
+const dz=document.getElementById('drop-zone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');go(e.dataTransfer.files[0]);});
+document.getElementById('file-input').addEventListener('change',e=>go(e.target.files[0]));
+
+function resetar(){
+  document.getElementById('sec-upload').style.display='block';
+  document.getElementById('sec-dashboard').style.display='none';
+  document.getElementById('periodo-badge').style.display='none';
+  document.getElementById('btn-nova').style.display='none';
+  document.getElementById('file-input').value='';
+  DATA=[];ativo=0;
+}
+
+async function go(file){
+  if(!file||file.type!=='application/pdf')return;
+  document.getElementById('sec-upload').style.display='none';
+  document.getElementById('sec-loading').style.display='block';
+  try{
+    const buf=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let txt='';
+    for(let i=1;i<=pdf.numPages;i++){
+      const pg=await pdf.getPage(i);
+      const tc=await pg.getTextContent();
+      const groups={};
+      tc.items.forEach(item=>{
+        const y=Math.round(item.transform[5]);
+        if(!groups[y])groups[y]=[];
+        groups[y].push({x:item.transform[4],s:item.str});
+      });
+      Object.keys(groups).sort((a,b)=>b-a).forEach(y=>{
+        txt+=groups[y].sort((a,b)=>a.x-b.x).map(i=>i.s).join(' ')+'\n';
+      });
+      txt+='\f';
+    }
+    DATA=parse(txt);
+    render();
+  }catch(e){
+    document.getElementById('sec-loading').style.display='none';
+    document.getElementById('sec-upload').style.display='block';
+    alert('Erro: '+e.message);
+  }
+}
+
+function pt(t){if(!t||!t.includes(':'))return 0;const[h,m]=t.split(':').map(Number);return h*60+m;}
+function ft(m,sign=false){if(m===0)return '—';const s=m<0?'-':(sign?'+':'');const a=Math.abs(m);return`${s}${String(Math.floor(a/60)).padStart(2,'0')}:${String(a%60).padStart(2,'0')}`;}
+
+function parse(text){
+  const pages=text.split('\f').filter(p=>p.includes('CARTÃO PONTO'));
+  return pages.map(page=>{
+    const lines=page.split('\n');
+    let nome=null,ent=null,horComp=null,per=null,dias=[],tot={};
+    lines.forEach(line=>{
+      let m;
+      m=line.match(/Empregado:\s*\d+\s*-\s*(.+?)(?:\s{3,}|Local:|$)/);
+      if(m)nome=m[1].trim();
+      m=line.match(/Período:\s*(\d{2}\/\d{2}\/\d{4})\s*a\s*(\d{2}\/\d{2}\/\d{4})/);
+      if(m)per=m[1]+' a '+m[2];
+      m=line.match(/Horários:\s*\d+\s+(\d{2}:\d{2})\s+(\d{2}:\d{2})\s+(\d{2}:\d{2})\s+(\d{2}:\d{2})/);
+      if(m){ent=m[1];horComp=m[1]+" - "+m[2]+" / "+m[3]+" - "+m[4];}
+      m=line.match(/^(\d{2}\/\d{2})\s+(SEG|TER|QUA|QUI|SEX)/);
+      if(m){
+        const data=m[1],sem=m[2],rest=line.slice(m[0].length);
+        if(rest.includes('Marcações Inválidas')){dias.push({data,sem,status:'invalido',entrada:null,saida:null,trab:0,extra:0,atraso:0});return;}
+        const times=[...rest.matchAll(/\b(\d{2}:\d{2})\b/g)].map(x=>x[1]);
+        if(!times.length)return;
+        const entrada=times[0];
+        let saida=null;
+        for(let i=times.length-1;i>0;i--){if(pt(times[i])>pt('12:00')){saida=times[i];break;}}
+        if(!saida&&times.length>1)saida=times[times.length-1];
+        const trabM=rest.match(/\b(0[5-9]:\d{2}|1[0-2]:\d{2})\b/);
+        const trab=trabM?pt(trabM[1]):0;
+        const extras=[...rest.matchAll(/\b(0[01]:\d{2})\b/g)].map(x=>x[1]);
+        const extra=extras.length>0?pt(extras[0]):0;
+        const atraso=(entrada&&ent&&pt(entrada)-pt(ent)>10)?pt(entrada)-pt(ent):0;
+        dias.push({data,sem,status:'normal',entrada,saida,trab,extra,atraso});
+      }
+      let mt;
+      mt=line.match(/Saldo BH Anterior:\s*([\d:]+)/);if(mt)tot.ant=mt[1];
+      mt=line.match(/Saldo BH Residual\s*:\s*([\d:]+)/);if(mt)tot.res=mt[1];
+      mt=line.match(/Crédito BH\s*:\s*([\d:]+)/);if(mt)tot.cred=mt[1];
+      mt=line.match(/Compensação BH:\s*([\d:]+)/);if(mt)tot.comp=mt[1];
+      mt=line.match(/Total Hora Trabalha:\s*([\d:]+)/);if(mt)tot.total=mt[1];
+      mt=line.match(/A vencer em\s*([^:]+):\s*([\d:]+)/);if(mt){tot.vencer=mt[2];tot.vencerData=mt[1].trim();}
+    });
+    return{nome,periodo:per,ent,horComp,dias,tot};
+  }).filter(a=>a.nome);
+}
+
+function initials(n){const p=n.trim().split(' ');return(p[0][0]+(p[p.length-1][0])).toUpperCase();}
+function first(n){return n.split(' ')[0];}
+
+function render(){
+  document.getElementById('sec-loading').style.display='none';
+  document.getElementById('sec-dashboard').style.display='block';
+  document.getElementById('btn-nova').style.display='block';
+  if(DATA[0]?.periodo){
+    const b=document.getElementById('periodo-badge');
+    b.textContent='📅 '+DATA[0].periodo;b.style.display='block';
+  }
+  renderSum();renderBtns();renderDias();renderBH();renderAtrasos();
+}
+
+function renderSum(){
+  document.getElementById('sum-grid').innerHTML=DATA.map((a,i)=>{
+    const cor=CORES[i]||'#2563eb';
+    const atd=a.dias.filter(d=>d.atraso>0);
+    const atMin=atd.reduce((s,d)=>s+d.atraso,0);
+    const sMin=pt(a.tot.res||'0:0');
+    const pct=Math.min(100,(sMin/480)*100);
+    const scor=sMin>0?'pos':sMin<0?'neg':'';
+    return`<div class="sum-card">
+      <div class="sum-nome"><div class="avatar" style="background:${cor}20;color:${cor}">${initials(a.nome)}</div>${a.nome.split(' ').slice(0,2).join(' ')}</div>
+      <div class="sum-row"><span class="lbl">Saldo BH atual</span><span class="val ${scor}">${a.tot.res||'—'}</span></div>
+      <div class="sum-row"><span class="lbl">Crédito período</span><span class="val pos">${a.tot.cred||'—'}</span></div>
+      <div class="sum-row"><span class="lbl">Dias com atraso</span><span class="val ${atd.length>2?'warn':''}">${atd.length}${atd.length>0?' ('+ft(atMin)+')':''}</span></div>
+      <div class="sum-row"><span class="lbl">Jornada</span><span class="val" style="font-size:11px">${a.horComp||a.ent||'—'}</span></div>
+      <div class="bh-bar"><div class="bh-fill" style="width:${pct}%;background:${cor}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderBtns(){
+  document.getElementById('ana-btns').innerHTML=DATA.map((a,i)=>{
+    const cor=CORES[i]||'#2563eb';
+    return`<button class="ana-btn ${i===0?'ativo':''}" id="ab${i}"
+      style="${i===0?'background:'+cor+';color:#fff':''}"
+      onclick="selAna(${i})">${first(a.nome)}</button>`;
+  }).join('');
+}
+
+function selAna(i){
+  const ji=document.getElementById('jornada-info');
+  if(ji&&DATA[i])ji.innerHTML='<b>Jornada:</b> '+(DATA[i].horComp||DATA[i].ent||'—');
+  ativo=i;
+  DATA.forEach((_,j)=>{
+    const b=document.getElementById('ab'+j);
+    const cor=CORES[j]||'#2563eb';
+    if(j===i){b.classList.add('ativo');b.style.background=cor;b.style.color='#fff';}
+    else{b.classList.remove('ativo');b.style.background='';b.style.color='';}
+  });
+  renderDias();
+}
+
+function renderDias(){
+  const ji=document.getElementById('jornada-info');
+  if(ji&&DATA[ativo])ji.innerHTML='<b>Jornada:</b> '+(DATA[ativo].horComp||DATA[ativo].ent||'—');
+  const a=DATA[ativo];if(!a)return;
+  document.getElementById('tbl-body').innerHTML=a.dias.map(d=>{
+    let badge='';
+    if(d.status==='invalido')badge='<span class="badge b-inv">Inválido</span>';
+    else if(d.atraso>0)badge='<span class="badge b-late">Atrasado</span>';
+    else if(d.extra>0)badge='<span class="badge b-extra">Extra</span>';
+    else badge='<span class="badge b-ok">Ok</span>';
+    return`<tr>
+      <td><b>${d.data}</b></td>
+      <td>${DIAS_PT[d.sem]||d.sem}</td>
+      <td style="color:${d.atraso>0?'#dc2626':'inherit'};font-weight:${d.atraso>0?700:400}">${d.entrada||'—'}</td>
+      <td>${d.saida||'—'}</td>
+      <td>${ft(d.trab)}</td>
+      <td>${d.atraso>0?'<span style="color:#dc2626;font-weight:700">+'+ft(d.atraso)+'</span>':'—'}</td>
+      <td>${d.extra>0?'<span style="color:#2563eb;font-weight:700">+'+ft(d.extra)+'</span>':'—'}</td>
+      <td>${badge}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderBH(){
+  document.getElementById('bh-cards').innerHTML=DATA.map((a,i)=>{
+    const cor=CORES[i]||'#2563eb';
+    const sMin=pt(a.tot.res||'0:0');
+    const scor=sMin>0?'#059669':sMin<0?'#dc2626':'#1a1f36';
+    return`<div class="bh-card">
+      <div class="sum-nome" style="margin-bottom:12px"><div class="avatar" style="background:${cor}20;color:${cor}">${initials(a.nome)}</div>${first(a.nome)}</div>
+      <div class="bh-row"><span class="lbl">Saldo anterior</span><span>${a.tot.ant||'—'}</span></div>
+      <div class="bh-row"><span class="lbl">Crédito no período</span><span class="pos">+${a.tot.cred||'—'}</span></div>
+      <div class="bh-row"><span class="lbl">Compensações</span><span class="neg">-${a.tot.comp||'—'}</span></div>
+      <div class="bh-row"><span class="lbl">Total horas trabalhadas</span><span>${a.tot.total||'—'}</span></div>
+      <div class="bh-row"><span class="lbl">Vence em ${a.tot.vencerData||'—'}</span><span class="${pt(a.tot.vencer||'0:0')>0?'warn':''}">${a.tot.vencer&&pt(a.tot.vencer)>0?a.tot.vencer:'—'}</span></div>
+      <div class="bh-row"><span class="lbl">Saldo atual</span><span style="color:${scor};font-size:18px;font-weight:700">${a.tot.res||'—'}</span></div>
+    </div>`;
+  }).join('');
+}
+
+let atAtivo=0, atChart=null;
+function renderAtrasos(){
+  const wrap=document.getElementById('at-btns');
+  wrap.innerHTML=DATA.map((a,i)=>{
+    const cor=CORES[i]||'#2563eb';
+    const n=a.dias.filter(d=>d.atraso>0).length;
+    return`<button class="ana-btn ${i===0?'ativo':''}" id="atb${i}"
+      style="${i===0?'background:'+cor+';color:#fff':''}"
+      onclick="selAt(${i})">${first(a.nome)} ${n>0?'('+n+')':''}</button>`;
+  }).join('');
+  selAt(0);
+}
+function selAt(i){
+  atAtivo=i;
+  DATA.forEach((_,j)=>{
+    const b=document.getElementById('atb'+j);
+    const cor=CORES[j]||'#2563eb';
+    if(j===i){b.classList.add('ativo');b.style.background=cor;b.style.color='#fff';}
+    else{b.classList.remove('ativo');b.style.background='';b.style.color='';}
+  });
+  renderAtTbl();renderAtChart();
+}
+function renderAtTbl(){
+  const a=DATA[atAtivo];if(!a)return;
+  const atd=a.dias.filter(d=>d.atraso>0).sort((x,y)=>{
+    const[dx,mx]=x.data.split('/').map(Number);
+    const[dy,my]=y.data.split('/').map(Number);
+    return mx!==my?mx-my:dx-dy;
+  });
+  const tbody=document.getElementById('at-tbl');
+  if(!atd.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:#8b92b0;padding:1rem">Sem atrasos ✅</td></tr>';return;}
+  tbody.innerHTML=atd.map(d=>`<tr>
+    <td><b>${d.data}</b></td>
+    <td>${DIAS_PT[d.sem]||d.sem}</td>
+    <td style="color:#dc2626;font-weight:700">${d.entrada}</td>
+    <td style="color:#dc2626;font-weight:700">+${ft(d.atraso)}</td>
+  </tr>`).join('');
+}
+function renderAtChart(){
+  const a=DATA[atAtivo];if(!a)return;
+  const cor=CORES[atAtivo]||'#2563eb';
+  const todos=a.dias.filter(d=>d.status==='normal');
+  const labels=todos.map(d=>d.data);
+  const vals=todos.map(d=>d.atraso>0?Math.round(d.atraso):0);
+  const colors=todos.map(d=>d.atraso>0?'#dc2626':'#d9ead3');
+  if(atChart){atChart.destroy();}
+  const ctx=document.getElementById('at-chart').getContext('2d');
+  atChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{data:vals,backgroundColor:colors,borderRadius:4,borderWidth:0}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Atraso: '+ft(ctx.raw)}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},color:'#8b92b0'}},
+        y:{grid:{color:'#f0f2f8'},ticks:{font:{size:10},color:'#8b92b0',callback:v=>v>0?ft(v):'0'},beginAtZero:true}
+      }
+    }
+  });
+}
+
+function goTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['dias','bh','atrasos'][i]===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</body>
+</html>
