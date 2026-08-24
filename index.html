@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><!-- v24/08/2026 17:12 -->
+<meta charset="UTF-8"><!-- v24/08/2026 17:13 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -572,7 +572,7 @@ const USERS = [
 let currentUser = null;
 
 // ── DADOS FÉRIAS ──────────────────────────────────────────────────────────────
-// LAST_UPDATE: 24/08/2026 17:12
+// LAST_UPDATE: 24/08/2026 17:13
 const INLINE_DATA = [
 // @@DATA_START@@
 {DRT:'9003013508',NOME:'CAMILA CRISTINE DE MORAES BARBOZA',CARGO:'ANALISTA',FERIAS1_INICIO:'2025-12-22',FERIAS1_FIM:'2026-01-10',FERIAS2_INICIO:'',FERIAS2_FIM:'',OBS:'20 DIAS',dias_pendentes:0,AGENDADA:'SIM'},
@@ -585,7 +585,7 @@ const INLINE_DATA = [
 ];
 
 // ── DADOS ANIVERSÁRIO ─────────────────────────────────────────────────────────
-// ANIV_LAST_UPDATE: 24/08/2026 17:12
+// ANIV_LAST_UPDATE: 24/08/2026 17:13
 const ANIV_DATA = [
 // @@ANIV_DATA_START@@
 {NOME:'CAROLINA RIBEIRO DE ANDRADE',ANIVERSARIO:'1994-03-17',MES:'MARÇO',STATUS:'PENDENTE AGENDAR',DATA_FOLGA:'',COMENTARIOS:'Optou por tirar a folga em outra data/mês.'},
@@ -1106,7 +1106,7 @@ const now=new Date();
 calYear=now.getFullYear();
 calMonth=now.getMonth();
 employees=INLINE_DATA;
-const ts='24/08/2026 17:12';
+const ts='24/08/2026 17:13';
 document.getElementById('last-update').textContent=ts.startsWith('@@')?'Dados embutidos':'Atualizado: '+ts;
 document.querySelectorAll('.sidebar-subnav').forEach(s=>s.style.display='none');
 document.getElementById('ferias-subnav').style.display='block';
